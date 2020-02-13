@@ -6,12 +6,15 @@
   <link rel="stylesheet" href="css/index.css"/>
   <title>Document</title>
 <script src="src/utils.js"></script>
-<script src="src/svg.js"></script>
+<script src="src/graph.js"></script>
+<script src="src/pen.js"></script>
+<script src="src/drawing.js"></script>
+<script src="src/linePen.js"></script>
 <script>
   window.onload = function() {
-    const svg = new Svg();
-    svg.drawLine({x: 0, y: 0}, {x: 20, y: 20});
-    svg.attachTo(document.getElementById('bdy'));
+    const g = new Graph(400, 400);
+    g.draw();
+    g.attachTo(document.getElementById('bdy'));
   };
 </script>
 </head>
