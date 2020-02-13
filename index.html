@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/index.css"/>
+  <title>Document</title>
+<script src="src/utils.js"></script>
+<script src="src/svg.js"></script>
+<script>
+  window.onload = function() {
+    const svg = new Svg();
+    svg.drawLine({x: 0, y: 0}, {x: 20, y: 20});
+    svg.attachTo(document.getElementById('bdy'));
+  };
+</script>
+</head>
+<body id="bdy">
+</body>
+</html>
