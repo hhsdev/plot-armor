@@ -42,6 +42,30 @@ class PointGenerator {
 
   generate() {
     const { x, y } = this;
-    return {x, y};
+    return { x, y };
+  }
+
+  fromTopLeftCorner(dx, dy) {
+    this.x = dx;
+    this.y = dy;
+    return this;
+  }
+
+  fromBottomLeftCorner(dx, dy) {
+    this.x = dx;
+    this.y = this.y1 - dy;
+    return this;
+  }
+
+  fromTopRightCorner(dx, dy) {
+    this.x = this.x1 -dx;
+    this.y = dy;
+    return this;
+  }
+
+  fromBottomRightCorner(dx, dy) {
+    this.x = this.x1 - dx;
+    this.y = this.y1 - dy;
+    return this;
   }
 }

@@ -10,26 +10,31 @@ class LinePen extends Pen {
   }
 
   setThickness(thickness) {
+    this._commitPath();
     this.thickness = thickness;
     return this;
   }
 
   setLineColor(color) {
+    this._commitPath();
     this.lineColor = color;
     return this;
   }
 
   setDashed() {
+    this._commitPath();
     this.strokeDashArray = '7, 7';
     return this;
   }
 
   setDotted() {
+    this._commitPath();
     this.strokeDashArray = '2, 2';
     return this;
   }
 
   setSolid() {
+    this._commitPath();
     this.strokeDashArray = '';
     return this;
   }
@@ -38,17 +43,33 @@ class LinePen extends Pen {
     this.actions.push(`M ${point.x}, ${point.y} `);
     return this;
   }
+
   lineTo(point) {
     this.actions.push(`L ${point.x},${point.y} `);
     return this;
   }
 
-  drawOn(drawing) {
+  connect() {
+    this.actions.push('Z ');
+    return this;
+  }
+  _commitPath() {
+    if (this.actions.length === 0) return;
+
 		let pathString = `<path stroke-width="${this.thickness}" ` +
         `stroke="${this.lineColor}" ` +
-        `stroke-dasharray="${this.strokeDashArray}"` +
+        `stroke-dasharray="${this.strokeDashArray}" ` +
+        'fill="transparent" ' +
         `d="${this.actions.reduce((accu, curr) => accu += curr)}"></path>`;
-    drawing.html += pathString;
+
+    this.actions = [];
+    this.html += pathString;
+  }
+
+  drawOn(drawing) {
+    this._commitPath();
+    drawing.html += this.html;
+    this.html = '';
     return this;
   }
 
