@@ -12,9 +12,23 @@ class Graph {
     this.xTicks = 24;
     this.yTicks = 24;
 
+    this.xLabel = "x-axis";
     this.majorTickSize = 10;
     this.minorTickSize = 5;
-    this.pen = new LinePen().setThickness(1).setLineColor("#333");
+    this.pen = new LinePen().setThickness(1).setLineColor("black");
+  }
+
+  drawLabels() {
+    const offset = Math.round(getTextWidth(this.label) / 2);
+    new TextPen()
+      .text(
+        this.xLabel,
+        this.pointGenerator
+          .fromHalfHeight(offset)
+          .fromLeftBorder(this.padding - 15)
+          .generate()
+      )
+      .drawOn(this.drawing);
   }
 
   attachTo(container) {
@@ -24,11 +38,7 @@ class Graph {
   draw() {
     this._drawBorder();
     this._drawTicks();
-  }
-
-  _drawAxes() {
-    this._drawXAxis();
-    this._drawYAxis();
+    this.drawLabels();
   }
 
   _drawBorder() {
@@ -56,40 +66,6 @@ class Graph {
       .lineTo(corners[2])
       .lineTo(corners[3])
       .connect()
-      .drawOn(this.drawing);
-  }
-
-  _drawXAxis() {
-    const startPoint = this.pointGenerator
-      .distanceFromLeftBorder(this.padding)
-      .distanceFromBottomBorder(this.padding)
-      .generate();
-
-    const endPoint = this.pointGenerator
-      .distanceFromRightBorder(this.padding)
-      .distanceFromBottomBorder(this.padding)
-      .generate();
-
-    this.pen
-      .startAt(startPoint)
-      .lineTo(endPoint)
-      .drawOn(this.drawing);
-  }
-
-  _drawYAxis() {
-    const startPoint = this.pointGenerator
-      .distanceFromLeftBorder(this.padding)
-      .distanceFromTopBorder(this.padding)
-      .generate();
-
-    const endPoint = this.pointGenerator
-      .distanceFromLeftBorder(this.padding)
-      .distanceFromBottomBorder(this.padding)
-      .generate();
-
-    this.pen
-      .startAt(startPoint)
-      .lineTo(endPoint)
       .drawOn(this.drawing);
   }
 
@@ -124,12 +100,12 @@ class Graph {
     this.pointGenerator;
     const startPoint = this.pointGenerator
       .xIs(lengthAlongAxis)
-      .distanceFromBottomBorder(this.padding)
+      .fromBottomBorder(this.padding)
       .generate();
 
     const endPoint = this.pointGenerator
       .xIs(lengthAlongAxis)
-      .distanceFromBottomBorder(this.padding - tickSize)
+      .fromBottomBorder(this.padding - tickSize)
       .generate();
 
     this.pen.startAt(startPoint).lineTo(endPoint);
@@ -138,18 +114,21 @@ class Graph {
   _drawXGridLine(lengthAlongXAxis) {
     const startPoint = this.pointGenerator
       .xIs(lengthAlongXAxis)
-      .distanceFromBottomBorder(this.padding)
+      .fromBottomBorder(this.padding)
       .generate();
 
     const endPoint = this.pointGenerator
       .xIs(lengthAlongXAxis)
-      .distanceFromTopBorder(this.padding)
+      .fromTopBorder(this.padding)
       .generate();
+
     this.pen
       .setDashed()
+      .setLineColor("#666")
       .startAt(startPoint)
       .lineTo(endPoint)
-      .setSolid();
+      .setSolid()
+      .setLineColor("black");
   }
 
   _drawYTicks() {
@@ -178,13 +157,13 @@ class Graph {
   _drawYTick(lengthAlongAxis, tickSize) {
     this.pointGenerator;
     const startPoint = this.pointGenerator
-      .distanceFromBottomBorder(lengthAlongAxis)
-      .distanceFromLeftBorder(this.padding)
+      .fromBottomBorder(lengthAlongAxis)
+      .fromLeftBorder(this.padding)
       .generate();
 
     const endPoint = this.pointGenerator
-      .distanceFromBottomBorder(lengthAlongAxis)
-      .distanceFromLeftBorder(this.padding - tickSize)
+      .fromBottomBorder(lengthAlongAxis)
+      .fromLeftBorder(this.padding - tickSize)
       .generate();
 
     this.pen.startAt(startPoint).lineTo(endPoint);
@@ -192,19 +171,21 @@ class Graph {
 
   _drawYGridLine(lengthAlongAxis) {
     const startPoint = this.pointGenerator
-      .distanceFromBottomBorder(lengthAlongAxis)
-      .distanceFromRightBorder(this.padding)
+      .fromBottomBorder(lengthAlongAxis)
+      .fromRightBorder(this.padding)
       .generate();
 
     const endPoint = this.pointGenerator
-      .distanceFromBottomBorder(lengthAlongAxis)
-      .distanceFromLeftBorder(this.padding)
+      .fromBottomBorder(lengthAlongAxis)
+      .fromLeftBorder(this.padding)
       .generate();
 
     this.pen
       .setDashed()
+      .setLineColor("#666")
       .startAt(startPoint)
       .lineTo(endPoint)
-      .setSolid();
+      .setSolid()
+      .setLineColor("black");
   }
 }

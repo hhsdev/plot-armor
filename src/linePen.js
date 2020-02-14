@@ -23,7 +23,7 @@ class LinePen extends Pen {
 
   setDashed() {
     this._commitPath();
-    this.strokeDashArray = '7, 7';
+    this.strokeDashArray = '5,5';
     return this;
   }
 

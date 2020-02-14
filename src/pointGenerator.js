@@ -20,22 +20,22 @@ class PointGenerator {
     return this;
   }
 
-  distanceFromTopBorder(distance) {
+  fromTopBorder(distance) {
     this.y = distance;
     return this;
   }
 
-  distanceFromBottomBorder(distance) {
+  fromBottomBorder(distance) {
     this.y = this.y1 - distance;
     return this;
   }
 
-  distanceFromRightBorder(distance) {
+  fromRightBorder(distance) {
     this.x = this.x1 - distance;
     return this;
   }
 
-  distanceFromLeftBorder(distance) {
+  fromLeftBorder(distance) {
     this.x = distance;
     return this;
   }
@@ -68,4 +68,25 @@ class PointGenerator {
     this.y = this.y1 - dy;
     return this;
   }
+
+  halfWidth() {
+    this.x = (this.x0 + this.x1) / 2;
+    return this;
+  }
+
+  halfHeight() {
+    this.y = (this.y0 + this.y1) / 2;
+    return this;
+  }
+
+  fromHalfHeight(offset) {
+    this.y = (this.y0 + this.y1) / 2 + offset;
+    return this;
+  }
+
+  fromHalfWidth(offset) {
+    this.x = (this.x0 + this.x1) / 2 + offset;
+    return this;
+  }
+
 }

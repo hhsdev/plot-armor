@@ -9,12 +9,15 @@
   <script src="src/pointGenerator.js"></script>
   <script src="src/utils.js"></script>
   <script src="src/graph.js"></script>
+
   <script src="src/pen.js"></script>
-  <script src="src/drawing.js"></script>
   <script src="src/linePen.js"></script>
+  <script src="src/textPen.js"></script>
+
+  <script src="src/drawing.js"></script>
   <script>
     window.onload = function () {
-      const g = new Graph(400, 400);
+      const g = new Graph(600, 600);
       g.draw();
       g.attachTo(document.getElementById('bdy'));
     };
