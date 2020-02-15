@@ -46,24 +46,28 @@ class PointGenerator {
   }
 
   fromTopLeftCorner(dx, dy) {
+    dy = dy || dx;
     this.x = dx;
     this.y = dy;
     return this;
   }
 
   fromBottomLeftCorner(dx, dy) {
+    dy = dy || dx;
     this.x = dx;
     this.y = this.y1 - dy;
     return this;
   }
 
   fromTopRightCorner(dx, dy) {
+    dy = dy || dx;
     this.x = this.x1 -dx;
     this.y = dy;
     return this;
   }
 
   fromBottomRightCorner(dx, dy) {
+    dy = dy || dx;
     this.x = this.x1 - dx;
     this.y = this.y1 - dy;
     return this;

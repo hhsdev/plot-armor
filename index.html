@@ -6,15 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/index.css" />
   <title>Document</title>
-  <script src="src/pointGenerator.js"></script>
   <script src="src/utils.js"></script>
-  <script src="src/graph.js"></script>
+  <script src="src/pointGenerator.js"></script>
 
   <script src="src/pen.js"></script>
   <script src="src/linePen.js"></script>
   <script src="src/textPen.js"></script>
 
+  <script src="src/yAxis.js"></script>
+  <script src="src/xAxis.js"></script>
   <script src="src/drawing.js"></script>
+  <script src="src/graph.js"></script>
   <script>
     window.onload = function () {
       const g = new Graph(600, 600);
@@ -24,7 +26,9 @@
   </script>
 </head>
 
-<body id="bdy">
+<body>
+  <div id="bdy"></div>
+  <div id="text-measure-util"></div>
 </body>
 
 </html>

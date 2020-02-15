@@ -1,10 +1,11 @@
-function getTextWidth(text, font) {
-  // re-use canvas object for better performance
-  var canvas =
-    getTextWidth.canvas ||
-    (getTextWidth.canvas = document.createElement("canvas"));
-  var context = canvas.getContext("2d");
-  context.font = font;
-  var metrics = context.measureText(text);
-  return metrics.width;
+function getTextMetrics(text, font) {
+  const textMeasure = document.getElementById("text-measure-util");
+
+  textMeasure.style.font = font;
+  textMeasure.innerText = text;
+
+  const height = textMeasure.clientHeight + 1;
+  const width = textMeasure.clientWidth + 1;
+
+  return { height, width };
 }
