@@ -1,14 +1,22 @@
 "use strict";
 
 class Graph {
-  constructor(width, height) {
-    this.drawing = new Drawing(width, height);
-    this.width = width;
-    this.height = height;
-    this.padding = 30;
+  constructor(config) {
+    this.config = config;
 
-    this.yAxis = new YAxis(this.drawing, width, height, this.padding, "y-axis");
-    this.xAxis = new XAxis(this.drawing, width, height, this.padding, "x-axis");
+    const width = config.get("width", 600);
+    const height = config.get("height", 600);
+    this.config.setIfNotSet("padding", 30);
+    this.config.set(
+      "drawing",
+      new Drawing(config.get("width"), config.get("height"))
+    );
+
+    const xAxisConfig = this.config.clone();
+    const yAxisConfig = this.config.clone();
+
+    this.yAxis = new YAxis(xAxisConfig);
+    this.xAxis = new XAxis(yAxisConfig);
 
     this.pointGenerator = new PointGenerator(0, 0, width, height);
 
@@ -16,7 +24,7 @@ class Graph {
   }
 
   attachTo(container) {
-    this.drawing.attachTo(container);
+    this.config.get("drawing").attachTo(container);
   }
 
   draw() {
@@ -28,19 +36,31 @@ class Graph {
   _drawBorder() {
     const corners = [
       this.pointGenerator
-        .fromTopLeftCorner(this.padding, this.padding)
+        .fromTopLeftCorner(
+          this.config.get("padding"),
+          this.config.get("padding")
+        )
         .generate(),
 
       this.pointGenerator
-        .fromTopRightCorner(this.padding, this.padding)
+        .fromTopRightCorner(
+          this.config.get("padding"),
+          this.config.get("padding")
+        )
         .generate(),
 
       this.pointGenerator
-        .fromBottomRightCorner(this.padding, this.padding)
+        .fromBottomRightCorner(
+          this.config.get("padding"),
+          this.config.get("padding")
+        )
         .generate(),
 
       this.pointGenerator
-        .fromBottomLeftCorner(this.padding, this.padding)
+        .fromBottomLeftCorner(
+          this.config.get("padding"),
+          this.config.get("padding")
+        )
         .generate()
     ];
 
@@ -50,6 +70,6 @@ class Graph {
       .lineTo(corners[2])
       .lineTo(corners[3])
       .connect()
-      .drawOn(this.drawing);
+      .drawOn(this.config.get("drawing"));
   }
 }
