@@ -28,6 +28,6 @@ class Config {
   }
 
   clone() {
-    return new Config(Object.assign(this.data, {}));
+    return Object.assign(this, {});
   }
 }

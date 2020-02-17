@@ -12,11 +12,26 @@ class Graph {
       new Drawing(config.get("width"), config.get("height"))
     );
 
-    const xAxisConfig = this.config.clone();
-    const yAxisConfig = this.config.clone();
+    const xAxisConfig = new Config({
+      label: this.config.get("xLabel") || "X-axis",
+      orientation: "horizontal",
+      width: this.config.get("width"),
+      height: this.config.get("height"),
+      padding: this.config.get("padding"),
+      drawing: this.config.get("drawing")
+    });
 
-    this.yAxis = new YAxis(xAxisConfig);
-    this.xAxis = new XAxis(yAxisConfig);
+    const yAxisConfig = new Config({
+      label: this.config.get("yLabel") || "Y-axis",
+      orientation: "vertical",
+      width: this.config.get("width"),
+      height: this.config.get("height"),
+      padding: this.config.get("padding"),
+      drawing: this.config.get("drawing")
+    });
+
+    this.yAxis = new Axis(yAxisConfig);
+    this.xAxis = new Axis(xAxisConfig);
 
     this.pointGenerator = new PointGenerator(0, 0, width, height);
 
@@ -28,7 +43,7 @@ class Graph {
   }
 
   draw() {
-    this._drawBorder();
+    //this._drawBorder();
     this.yAxis.draw();
     this.xAxis.draw();
   }
