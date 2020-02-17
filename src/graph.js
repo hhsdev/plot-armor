@@ -43,7 +43,6 @@ class Graph {
   }
 
   draw() {
-    //this._drawBorder();
     this.yAxis.draw();
     this.xAxis.draw();
   }
