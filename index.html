@@ -21,9 +21,11 @@
   <script src="src/yAxis.js"></script>
   <script src="src/xAxis.js"></script>
   <script src="src/graph.js"></script>
+  <script src="src/plotArmor.js"></script>
   <script>
     window.onload = function () {
-      const g = new Graph(new Config({ width: 600, height: 600 }));
+      const g = plotArmor.create();
+      //const g = new Graph(new Config({ width: 600, height: 600 }));
       g.draw();
       g.attachTo(document.getElementById('bdy'));
     };

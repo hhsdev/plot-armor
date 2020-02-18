@@ -1,16 +1,11 @@
 "use strict";
 
 class Graph {
-  constructor(config) {
-    this.config = config;
-
-    const width = config.get("width", 600);
-    const height = config.get("height", 600);
-    this.config.setIfNotSet("padding", 30);
-    this.config.set(
-      "drawing",
-      new Drawing(config.get("width"), config.get("height"))
-    );
+  constructor(height, width, padding) {
+    this.height = height;
+    this.width = width;
+    this.padding = padding;
+    this.drawing = new Drawing(this.height, this.width);
 
     const { xAxisConfig, yAxisConfig } = this._createAxisConfig();
     this.yAxis = new Axis(yAxisConfig);
@@ -22,28 +17,28 @@ class Graph {
 
   _createAxisConfig() {
     const xAxisConfig = new Config({
-      label: this.config.get("xLabel") || "X-axis",
+      label: "X-axis",
       orientation: "horizontal",
-      width: this.config.get("width"),
-      height: this.config.get("height"),
-      padding: this.config.get("padding"),
-      drawing: this.config.get("drawing")
+      width: this.width,
+      height: this.height,
+      padding: this.padding,
+      drawing: this.drawing
     });
 
     const yAxisConfig = new Config({
-      label: this.config.get("yLabel") || "Y-axis",
+      label: "Y-axis",
       orientation: "vertical",
-      width: this.config.get("width"),
-      height: this.config.get("height"),
-      padding: this.config.get("padding"),
-      drawing: this.config.get("drawing")
+      width: this.width,
+      height: this.height,
+      padding: this.padding,
+      drawing: this.drawing
     });
 
     return { xAxisConfig, yAxisConfig };
   }
 
   attachTo(container) {
-    this.config.get("drawing").attachTo(container);
+    this.drawing.attachTo(container);
   }
 
   draw() {
@@ -54,31 +49,19 @@ class Graph {
   _drawBorder() {
     const corners = [
       this.pointGenerator
-        .fromTopLeftCorner(
-          this.config.get("padding"),
-          this.config.get("padding")
-        )
+        .fromTopLeftCorner(this.padding)
         .generate(),
 
       this.pointGenerator
-        .fromTopRightCorner(
-          this.config.get("padding"),
-          this.config.get("padding")
-        )
+        .fromTopRightCorner(this.padding)
         .generate(),
 
       this.pointGenerator
-        .fromBottomRightCorner(
-          this.config.get("padding"),
-          this.config.get("padding")
-        )
+        .fromBottomRightCorner(this.padding)
         .generate(),
 
       this.pointGenerator
-        .fromBottomLeftCorner(
-          this.config.get("padding"),
-          this.config.get("padding")
-        )
+        .fromBottomLeftCorner(this.padding)
         .generate()
     ];
 
@@ -88,6 +71,6 @@ class Graph {
       .lineTo(corners[2])
       .lineTo(corners[3])
       .connect()
-      .drawOn(this.config.get("drawing"));
+      .drawOn(this.drawing);
   }
 }
