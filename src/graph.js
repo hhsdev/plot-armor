@@ -12,6 +12,15 @@ class Graph {
       new Drawing(config.get("width"), config.get("height"))
     );
 
+    const { xAxisConfig, yAxisConfig } = this._createAxisConfig();
+    this.yAxis = new Axis(yAxisConfig);
+    this.xAxis = new Axis(xAxisConfig);
+
+    this.pointGenerator = new PointGenerator(0, 0, width, height);
+    this.pen = new LinePen().setThickness(1).setLineColor("black");
+  }
+
+  _createAxisConfig() {
     const xAxisConfig = new Config({
       label: this.config.get("xLabel") || "X-axis",
       orientation: "horizontal",
@@ -30,12 +39,7 @@ class Graph {
       drawing: this.config.get("drawing")
     });
 
-    this.yAxis = new Axis(yAxisConfig);
-    this.xAxis = new Axis(xAxisConfig);
-
-    this.pointGenerator = new PointGenerator(0, 0, width, height);
-
-    this.pen = new LinePen().setThickness(1).setLineColor("black");
+    return { xAxisConfig, yAxisConfig };
   }
 
   attachTo(container) {
