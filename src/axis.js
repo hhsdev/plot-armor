@@ -1,28 +1,33 @@
 "use strict";
 
 class Axis {
-  constructor(config) {
-    this.config = config;
-    this.loadDefaults();
-  }
-
-  loadDefaults() {
-    this.config.setIfNotSet("label", "label");
-    this.config.setIfNotSet("fontSize", 16);
-
-    this.config.setIfNotSet("majorTickSize", 10);
-    this.config.setIfNotSet("minorTickSize", 5);
-    this.config.setIfNotSet("ticks", 28);
-    this.config.setIfNotSet("minorTicksPerMajorTick", 4);
+  constructor(
+    orientation,
+    label,
+    drawing,
+    width,
+    height,
+    padding,
+    fontSize,
+    ticks,
+    minorTicksPerMajorTick,
+    majorTickSize,
+    minorTickSize
+  ) {
+    this.orientation = orientation;
+    this.label = label;
+    this.drawing = drawing;
+    this.width = width;
+    this.height = height;
+    this.padding = padding;
+    this.fontSize = fontSize;
+    this.ticks = ticks;
+    this.minorTicksPerMajorTick = minorTicksPerMajorTick;
+    this.majorTickSize = majorTickSize;
+    this.minorTickSize = minorTickSize;
 
     this.pen = new LinePen().setThickness(1).setLineColor("black");
-    this.pointGenerator = new PointGenerator1D(
-      this.config.get("orientation"),
-      0,
-      0,
-      this.config.get("width"),
-      this.config.get("height")
-    );
+    this.pointGenerator = new PointGenerator1D(orientation, 0, 0, width, height);
   }
 
   draw() {
@@ -34,19 +39,19 @@ class Axis {
 
   _drawLine() {
     const startPoint = this.pointGenerator
-      .fromBaseStartCorner(this.config.get("padding"))
+      .fromBaseStartCorner(this.padding)
       .generate();
 
     const endPoint = this.pointGenerator
-      .fromBaseEndCorner(this.config.get("padding"))
+      .fromBaseEndCorner(this.padding)
       .generate();
 
     this.pen.startAt(startPoint).lineTo(endPoint);
-    this.pen.drawOn(this.config.get("drawing"));
+    this.pen.drawOn(this.drawing);
   }
 
   _drawLabel() {
-    if (this.config.get("orientation") === "horizontal") {
+    if (this.orientation === "horizontal") {
       this._drawLabelHorizonal();
     } else {
       this._drawLabelVertical();
@@ -55,106 +60,93 @@ class Axis {
 
   _drawLabelHorizonal() {
     const textMetrics = getTextMetrics(
-      this.config.get("label"),
-      `normal ${this.config.get("fontSize")}px Arial`
+      this.label,
+      `normal ${this.fontSize}px Arial`
     );
-    const offset = - Math.round(textMetrics.width / 2);
+    const offset = -Math.round(textMetrics.width / 2);
 
     const textStartPoint = this.pointGenerator
       .fromHalfMajorAxis(offset)
-      .fromBaseBorder(
-        this.config.get("padding") -
-          this.config.get("fontSize") -
-          this.config.get("majorTickSize")
-      )
+      .fromBaseBorder(this.padding - this.fontSize - this.majorTickSize)
       .generate();
 
     new TextPen()
-      .setText(this.config.get("label"))
+      .setText(this.label)
       .setPostion(textStartPoint)
-      .drawOn(this.config.get("drawing"));
+      .drawOn(this.drawing)
   }
 
   _drawLabelVertical() {
     const textMetrics = getTextMetrics(
-      this.config.get("label"),
-      `normal ${this.config.get("fontSize")}px Arial`
+      this.label,
+      `normal ${this.fontSize}px Arial`
     );
     const offset = Math.round(textMetrics.width / 2);
 
     const textStartPoint = this.pointGenerator
       .fromHalfMajorAxis(offset)
-      .fromBaseBorder(this.config.get("padding") - this.config.get("fontSize"))
+      .fromBaseBorder(this.padding - this.fontSize)
       .generate();
 
     new TextPen()
-      .setText(this.config.get("label"))
+      .setText(this.label)
       .setPostion(textStartPoint)
       .rotate(-90, textStartPoint)
-      .drawOn(this.config.get("drawing"));
+      .drawOn(this.drawing);
   }
 
   _drawTicks() {
-    const axisLength =
-      this.config.get("width") - 2 * this.config.get("padding");
-    const distanceBetweenTicks = axisLength / this.config.get("ticks");
+    const axisLength = this.width - 2 * this.padding;
+    const distanceBetweenTicks = axisLength / this.ticks;
 
-    for (let i = 0; i < this.config.get("ticks") + 1; i += 1) {
-      if (i % this.config.get("minorTicksPerMajorTick") === 0) {
+    for (let i = 0; i < this.ticks + 1; i += 1) {
+      if (i % this.minorTicksPerMajorTick === 0) {
         this._drawTick(
-          i * distanceBetweenTicks + this.config.get("padding"),
-          this.config.get("majorTickSize")
+          i * distanceBetweenTicks + this.padding, this.majorTickSize
         );
       } else {
         this._drawTick(
-          i * distanceBetweenTicks + this.config.get("padding"),
-          this.config.get("minorTickSize")
+          i * distanceBetweenTicks + this.padding,
+          this.minorTickSize
         );
       }
     }
-    this.pen.drawOn(this.config.get("drawing"));
+    this.pen.drawOn(this.drawing);
   }
 
   _drawTick(lengthAlongAxis, tickSize) {
     const startPoint = this.pointGenerator
       .fromStartBorder(lengthAlongAxis)
-      .fromBaseBorder(this.config.get("padding"))
+      .fromBaseBorder(this.padding)
       .generate();
 
     const endPoint = this.pointGenerator
       .fromStartBorder(lengthAlongAxis)
-      .fromBaseBorder(this.config.get("padding") - tickSize)
+      .fromBaseBorder(this.padding - tickSize)
       .generate();
     this.pen.startAt(startPoint).lineTo(endPoint);
   }
 
   _drawGridLines() {
-    const axisLength =
-      this.config.get("height") - 2 * this.config.get("padding");
-    const distanceBetweenTicks = axisLength / this.config.get("ticks");
-    for (
-      let i = 0;
-      i < this.config.get("ticks");
-      i += this.config.get("minorTicksPerMajorTick")
-    ) {
+    const axisLength = this.height - 2 * this.padding;
+    const distanceBetweenTicks = axisLength / this.ticks;
+    for (let i = 0; i < this.ticks; i += this.minorTicksPerMajorTick) {
       if (i !== 0) {
-        this._drawGridLine(
-          i * distanceBetweenTicks + this.config.get("padding")
-        );
+        this._drawGridLine(i * distanceBetweenTicks + this.padding);
       }
     }
-    this.pen.drawOn(this.config.get("drawing"));
+    this.pen.drawOn(this.drawing);
   }
 
   _drawGridLine(lengthAlongAxis) {
     const startPoint = this.pointGenerator
       .fromStartBorder(lengthAlongAxis)
-      .fromBaseBorder(this.config.get("padding"))
+      .fromBaseBorder(this.padding)
       .generate();
 
     const endPoint = this.pointGenerator
       .fromStartBorder(lengthAlongAxis)
-      .fromTopBorder(this.config.get("padding"))
+      .fromTopBorder(this.padding)
       .generate();
 
     this.pen
@@ -165,5 +157,4 @@ class Axis {
       .setSolid()
       .setLineColor("black");
   }
-
 }

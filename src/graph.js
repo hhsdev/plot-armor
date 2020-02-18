@@ -1,15 +1,14 @@
 "use strict";
 
 class Graph {
-  constructor(height, width, padding) {
+  constructor(height, width, padding, drawing, yAxis, xAxis) {
     this.height = height;
     this.width = width;
     this.padding = padding;
-    this.drawing = new Drawing(this.height, this.width);
+    this.drawing = drawing;
 
-    const { xAxisConfig, yAxisConfig } = this._createAxisConfig();
-    this.yAxis = new Axis(yAxisConfig);
-    this.xAxis = new Axis(xAxisConfig);
+    this.yAxis = yAxis;
+    this.xAxis = xAxis;
 
     this.pointGenerator = new PointGenerator(0, 0, width, height);
     this.pen = new LinePen().setThickness(1).setLineColor("black");
