@@ -12,28 +12,7 @@ class Graph {
 
     this.pointGenerator = new PointGenerator(0, 0, width, height);
     this.pen = new LinePen().setThickness(1).setLineColor("black");
-  }
-
-  _createAxisConfig() {
-    const xAxisConfig = new Config({
-      label: "X-axis",
-      orientation: "horizontal",
-      width: this.width,
-      height: this.height,
-      padding: this.padding,
-      drawing: this.drawing
-    });
-
-    const yAxisConfig = new Config({
-      label: "Y-axis",
-      orientation: "vertical",
-      width: this.width,
-      height: this.height,
-      padding: this.padding,
-      drawing: this.drawing
-    });
-
-    return { xAxisConfig, yAxisConfig };
+    this.plotLines = [];
   }
 
   attachTo(container) {
@@ -43,6 +22,9 @@ class Graph {
   draw() {
     this.yAxis.draw();
     this.xAxis.draw();
+    for (let plotLine of this.plotLines) {
+      plotLine.draw();
+    }
   }
 
   _drawBorder() {
@@ -71,5 +53,11 @@ class Graph {
       .lineTo(corners[3])
       .connect()
       .drawOn(this.drawing);
+  }
+
+  newPlotLine(dataset, color) {
+    console.log(dataset);
+    const plotLine = new PlotLine(this.width, this.height, this.width, this.height, dataset, this.drawing, 30, 30, color);
+    this.plotLines.push(plotLine);
   }
 }

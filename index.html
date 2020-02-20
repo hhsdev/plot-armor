@@ -20,12 +20,18 @@
   <script src="src/axis.js"></script>
   <script src="src/yAxis.js"></script>
   <script src="src/xAxis.js"></script>
+  <script src="src/plotLine.js"></script>
   <script src="src/graph.js"></script>
   <script src="src/plotArmor.js"></script>
   <script>
     window.onload = function () {
       const g = plotArmor.create();
-      //const g = new Graph(new Config({ width: 600, height: 600 }));
+      const arr = []
+      for (let i = 0; i < 300; ++i) { arr.push(i); }
+      const sinData = arr.map((num) => {
+        return { x: num * 2, y: (Math.sin(num / (3 * Math.PI)) * 100) + 120 }
+      });
+      g.newPlotLine(sinData, "red");
       g.draw();
       g.attachTo(document.getElementById('bdy'));
     };
