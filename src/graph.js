@@ -29,21 +29,10 @@ class Graph {
 
   _drawBorder() {
     const corners = [
-      this.pointGenerator
-        .fromTopLeftCorner(this.padding)
-        .generate(),
-
-      this.pointGenerator
-        .fromTopRightCorner(this.padding)
-        .generate(),
-
-      this.pointGenerator
-        .fromBottomRightCorner(this.padding)
-        .generate(),
-
-      this.pointGenerator
-        .fromBottomLeftCorner(this.padding)
-        .generate()
+      this.pointGenerator.fromTopLeftCorner(this.padding).generate(),
+      this.pointGenerator.fromTopRightCorner(this.padding).generate(),
+      this.pointGenerator.fromBottomRightCorner(this.padding).generate(),
+      this.pointGenerator.fromBottomLeftCorner(this.padding).generate()
     ];
 
     this.pen
@@ -56,8 +45,18 @@ class Graph {
   }
 
   newPlotLine(dataset, color) {
-    console.log(dataset);
-    const plotLine = new PlotLine(this.width, this.height, this.width, this.height, dataset, this.drawing, 30, 30, color);
+    const { width, height, drawing } = this;
+    const plotLine = new PlotLine({
+      width,
+      height,
+      maxX: this.width,
+      maxY: this.height,
+      dataset,
+      drawing,
+      xOffset: 30,
+      yOffset: 30,
+      color
+    });
     this.plotLines.push(plotLine);
   }
 }
