@@ -2,12 +2,16 @@
 
 export default class Drawing {
 	constructor(width, height) {
-		this.elementTagStart = '<svg width="' + width + '" height="' + height + '" xmlns="http://www.w3.org/2000/svg">';
-		this.elementTagEnd = '</svg>';
 		this.html = '';
+
+		this.view = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+		this.view.setAttribute("width", width);
+		this.view.setAttribute("height", height);
 	}
 
 	attachTo(container) {
-		container.innerHTML = this.elementTagStart + this.html + this.elementTagEnd;
+		this.view.innerHTML = this.html;
+		container.appendChild(this.view);
 	}
+
 }
