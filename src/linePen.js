@@ -8,34 +8,50 @@ export default class LinePen extends Pen {
     this.thickness = 0;
     this.lineColor = 'black';
     this.strokeDashArray = '';
+
+    this.paths = [];
+    this.currentPath = this.newPath();
+  }
+
+  newPath() {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("fill", "transparent");
+    return path;
+  }
+
+  setPathAttributes() {
+    this.currentPath.setAttribute("stroke-width", this.thickness);
+    this.currentPath.setAttribute("stroke", this.lineColor);
+    this.currentPath.setAttribute("stroke-dasharray", this.strokeDashArray);
+    this.currentPath.setAttribute("d", this.actions.reduce((accu, curr) => accu += curr));
   }
 
   setThickness(thickness) {
-    this._commitPath();
+    this.commitCurrentPath();
     this.thickness = thickness;
     return this;
   }
 
   setLineColor(color) {
-    this._commitPath();
-    this.lineColor = color;
+    this.commitCurrentPath();
+    this.lineColor = color
     return this;
   }
 
   setDashed() {
-    this._commitPath();
+    this.commitCurrentPath();
     this.strokeDashArray = '5,5';
     return this;
   }
 
   setDotted() {
-    this._commitPath();
-    this.strokeDashArray = '2, 2';
+    this.commitCurrentPath();
+    this.strokeDashArray = '2,2';
     return this;
   }
 
   setSolid() {
-    this._commitPath();
+    this.commitCurrentPath();
     this.strokeDashArray = '';
     return this;
   }
@@ -54,23 +70,21 @@ export default class LinePen extends Pen {
     this.actions.push('Z ');
     return this;
   }
-  _commitPath() {
+
+  commitCurrentPath() {
     if (this.actions.length === 0) return;
-
-		let pathString = `<path stroke-width="${this.thickness}" ` +
-        `stroke="${this.lineColor}" ` +
-        `stroke-dasharray="${this.strokeDashArray}" ` +
-        'fill="transparent" ' +
-        `d="${this.actions.reduce((accu, curr) => accu += curr)}"></path>`;
-
+    this.setPathAttributes();
     this.actions = [];
-    this.html += pathString;
+    this.paths.push(this.currentPath);
+
+    this.currentPath = this.newPath();
   }
 
   drawOn(drawing) {
-    this._commitPath();
-    drawing.html += this.html;
-    this.html = '';
+    this.commitCurrentPath();
+    for (const path of this.paths) {
+      drawing.add(path);
+    }
     return this;
   }
 
