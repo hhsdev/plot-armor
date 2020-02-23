@@ -2,6 +2,7 @@
 
 class Graph {
   constructor(config) {
+    config = config || {};
     this.width = config.width || 600;
     this.height = config.height || 600;
     this.padding = config.padding || 30;
@@ -16,9 +17,9 @@ class Graph {
   }
 
   createXAxis(config) {
-    let { xAxis } = config;
-    if (!xAxis) {
-      xAxis = {
+    let xAxisConfig = config.xAxis;
+    if (!xAxisConfig) {
+      xAxisConfig = {
         xOffset: 30,
         yOffset: 30,
         fontSize: 16,
@@ -28,35 +29,37 @@ class Graph {
         minorTickSize: 5
       };
     }
-    return new Axis(
-      "horizontal",
-      "X-Axis",
-      this.drawing,
-      this.width,
-      this.height,
-      this.padding,
-      xAxis.fontSize || 16,
-      xAxis.ticks || 28,
-      xAxis.minorTicksPerMajorTick || 4,
-      xAxis.majorTickSize || 10,
-      xAxis.minorTickSize || 5
-    );
+    xAxisConfig.drawing = this.drawing;
+    xAxisConfig.orientation = "horizontal";
+    xAxisConfig.label = xAxisConfig.label || "X-Axis";
+    xAxisConfig.width = xAxisConfig.width || this.width;
+    xAxisConfig.height = xAxisConfig.height || this.height;
+    xAxisConfig.padding = xAxisConfig.padding || this.padding;
+
+    return new Axis(xAxisConfig);
   }
 
-  createYAxis() {
-    return new Axis(
-      "vertical",
-      "Y-Axis",
-      this.drawing,
-      600,
-      600,
-      30,
-      16,
-      28,
-      4,
-      10,
-      5
-    );
+  createYAxis(config) {
+    let yAxisConfig = config.yAxis;
+    if (!yAxisConfig) {
+      yAxisConfig = {
+        xOffset: 30,
+        yOffset: 30,
+        fontSize: 16,
+        ticks: 28,
+        minorTicksPerMajorTick: 4,
+        majorTickSize: 10,
+        minorTickSize: 5
+      };
+    }
+    yAxisConfig.drawing = this.drawing;
+    yAxisConfig.orientation = "vertical";
+    yAxisConfig.label = yAxisConfig.label || "Y-Axis";
+    yAxisConfig.width = yAxisConfig.width || this.width;
+    yAxisConfig.height = yAxisConfig.height || this.height;
+    yAxisConfig.padding = yAxisConfig.padding || this.padding;
+
+    return new Axis(yAxisConfig);
   }
 
   attachTo(container) {

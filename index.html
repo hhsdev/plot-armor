@@ -25,9 +25,9 @@
     window.onload = function () {
       const g = plotArmor.create();
       const arr = []
-      for (let i = 0; i < 300; ++i) { arr.push(i); }
+      for (let i = 0; i < 180; ++i) { arr.push(i); }
       const sinData = arr.map((num) => {
-        return { x: num * 2, y: (Math.sin(num / (3 * Math.PI)) * 100) + 120 }
+        return { x: num * 3, y: (Math.sin(num / (2 * Math.PI)) * 100) + 120 }
       });
       g.newPlotLine(sinData, "red");
       g.draw();

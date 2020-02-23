@@ -1,33 +1,22 @@
 "use strict";
 
 class Axis {
-  constructor(
-    orientation,
-    label,
-    drawing,
-    width,
-    height,
-    padding,
-    fontSize,
-    ticks,
-    minorTicksPerMajorTick,
-    majorTickSize,
-    minorTickSize
-  ) {
-    this.orientation = orientation;
-    this.label = label;
-    this.drawing = drawing;
-    this.width = width;
-    this.height = height;
-    this.padding = padding;
-    this.fontSize = fontSize;
-    this.ticks = ticks;
-    this.minorTicksPerMajorTick = minorTicksPerMajorTick;
-    this.majorTickSize = majorTickSize;
-    this.minorTickSize = minorTickSize;
+  constructor(config) {
+    this.orientation = config.orientation; // TODO: not having this is an error
+    this.label = config.label || "";
+
+    this.drawing = config.drawing; // TODO: not having this is an error
+    this.width = config.width || 600;
+    this.height = config.height || 600;
+    this.padding = config.padding || 30;
+    this.fontSize = config.fontSize || 16;
+    this.ticks = config.ticks || 28;
+    this.minorTicksPerMajorTick = config.minorTicksPerMajorTick || 4;
+    this.majorTickSize = config.majorTickSize || 10;
+    this.minorTickSize = config.minorTickSize || 5;
 
     this.pen = new LinePen().setThickness(1).setLineColor("black");
-    this.pointGenerator = new PointGenerator1D(orientation, 0, 0, width, height);
+    this.pointGenerator = new PointGenerator1D(this.orientation, 0, 0, this.width, this.height);
   }
 
   draw() {

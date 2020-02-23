@@ -7,7 +7,8 @@ class PointGenerator1D {
     } else if (orientation === "vertical") {
       this.isHorizontal = false;
     } else {
-      console.log("Error: unregconized orientation");
+      console.log("Error: unregconized orientation: " + orientation);
+      console.trace('');
     }
 
     this.x0 = x0;
