@@ -1,13 +1,13 @@
 "use strict";
-import Pen from './pen';
+import Pen from "./pen";
 
 export default class LinePen extends Pen {
   constructor() {
     super();
     this.actions = [];
     this.thickness = 0;
-    this.lineColor = 'black';
-    this.strokeDashArray = '';
+    this.lineColor = "black";
+    this.strokeDashArray = "";
 
     this.paths = [];
     this.currentPath = this.newPath();
@@ -19,11 +19,23 @@ export default class LinePen extends Pen {
     return path;
   }
 
+  removeAllPaths(removeFromDrawing) {
+    if (removeFromDrawing) {
+      for (let path of this.paths) {
+        const parent = path.parentNode;
+        parent.removeChild(path);
+      }
+    }
+    this.paths = [];
+  }
   setPathAttributes() {
     this.currentPath.setAttribute("stroke-width", this.thickness);
     this.currentPath.setAttribute("stroke", this.lineColor);
     this.currentPath.setAttribute("stroke-dasharray", this.strokeDashArray);
-    this.currentPath.setAttribute("d", this.actions.reduce((accu, curr) => accu += curr));
+    this.currentPath.setAttribute(
+      "d",
+      this.actions.reduce((accu, curr) => (accu += curr))
+    );
   }
 
   setThickness(thickness) {
@@ -34,25 +46,25 @@ export default class LinePen extends Pen {
 
   setLineColor(color) {
     this.commitCurrentPath();
-    this.lineColor = color
+    this.lineColor = color;
     return this;
   }
 
   setDashed() {
     this.commitCurrentPath();
-    this.strokeDashArray = '5,5';
+    this.strokeDashArray = "5,5";
     return this;
   }
 
   setDotted() {
     this.commitCurrentPath();
-    this.strokeDashArray = '2,2';
+    this.strokeDashArray = "2,2";
     return this;
   }
 
   setSolid() {
     this.commitCurrentPath();
-    this.strokeDashArray = '';
+    this.strokeDashArray = "";
     return this;
   }
 
@@ -67,7 +79,7 @@ export default class LinePen extends Pen {
   }
 
   connect() {
-    this.actions.push('Z ');
+    this.actions.push("Z ");
     return this;
   }
 
@@ -87,5 +99,4 @@ export default class LinePen extends Pen {
     }
     return this;
   }
-
 }

@@ -43,11 +43,7 @@ export default class PlotLine {
   }
 
   addData(newData) {
-    for (let path of this.pen.paths) {
-      const parent = path.parentNode;
-      parent.removeChild(path);
-    }
-    this.pen.paths = [];
+    this.pen.removeAllPaths(true);
     this.dataset.push(newData);
     this.draw();
   }

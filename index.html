@@ -18,12 +18,12 @@
       //g.newPlotLine(sinData, "red");
       g.newPlotLine([], "red");
       g.draw();
-      let x = 0, y = 0;
-      setInterval(() => {
-        g.plotLines[0].addData({x, y});
-        x += 30;
-        y += 30;
-      }, 500);
+      let i =0;
+      const interval = setInterval(() => {
+        if (i >= sinData.length - 1) clearInterval(interval);
+        g.plotLines[0].addData(sinData[i]);
+        ++i;
+      }, 50);
       g.attachTo(document.getElementById('bdy'));
     };
   </script>
