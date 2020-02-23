@@ -1,5 +1,8 @@
 "use strict";
 import Pen from './pen';
+
+//TODO: Shouldn't this class be able to write multiple texts with mutiple styles??
+// refer to LinePen class for details
 export default class TextPen extends Pen {
   constructor() {
     super();
@@ -10,11 +13,11 @@ export default class TextPen extends Pen {
     this.transforms = [];
     this.text = '';
     this.point = {x: 0, y: 0};
-    this.html = '';
+    this.text = document.createElementNS("http://www.w3.org/2000/svg", "text");
   }
 
   setText(str) {
-    this.text = str;
+    this.text.innerHTML = str;
     return this;
   }
 
@@ -35,13 +38,15 @@ export default class TextPen extends Pen {
 
   _commit() {
     if (this.text === '') return;
-    this.html += `<text class="text-pen" x="${this.point.x}" y="${this.point.y}" ` +
-      `transform="${this.transforms.reduce((accu, curr) => accu + curr,'')}" >${this.text}</text>`;
+    this.text.setAttribute("class", "text-pen");
+    this.text.setAttribute("x", this.point.x);
+    this.text.setAttribute("y", this.point.y);
+    this.text.setAttribute("transform", this.transforms.reduce((accu, curr) => accu + curr,''));
   }
 
   drawOn(drawing) {
     this._commit();
-    drawing.html += this.html;
+    drawing.add(this.text);
     this.reset();
     return this;
   }
