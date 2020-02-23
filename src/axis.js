@@ -1,4 +1,8 @@
 "use strict";
+import LinePen from "./linePen";
+import TextPen from "./textPen";
+import PointGenerator1D from "./pointGenerator1D";
+import utils from './utils';
 
 class Axis {
   constructor(config) {
@@ -16,7 +20,13 @@ class Axis {
     this.minorTickSize = config.minorTickSize || 5;
 
     this.pen = new LinePen().setThickness(1).setLineColor("black");
-    this.pointGenerator = new PointGenerator1D(this.orientation, 0, 0, this.width, this.height);
+    this.pointGenerator = new PointGenerator1D(
+      this.orientation,
+      0,
+      0,
+      this.width,
+      this.height
+    );
   }
 
   draw() {
@@ -48,7 +58,7 @@ class Axis {
   }
 
   _drawLabelHorizonal() {
-    const textMetrics = getTextMetrics(
+    const textMetrics = utils.getTextMetrics(
       this.label,
       `normal ${this.fontSize}px Arial`
     );
@@ -62,11 +72,11 @@ class Axis {
     new TextPen()
       .setText(this.label)
       .setPostion(textStartPoint)
-      .drawOn(this.drawing)
+      .drawOn(this.drawing);
   }
 
   _drawLabelVertical() {
-    const textMetrics = getTextMetrics(
+    const textMetrics = utils.getTextMetrics(
       this.label,
       `normal ${this.fontSize}px Arial`
     );
@@ -91,7 +101,8 @@ class Axis {
     for (let i = 0; i < this.ticks + 1; i += 1) {
       if (i % this.minorTicksPerMajorTick === 0) {
         this._drawTick(
-          i * distanceBetweenTicks + this.padding, this.majorTickSize
+          i * distanceBetweenTicks + this.padding,
+          this.majorTickSize
         );
       } else {
         this._drawTick(
@@ -147,3 +158,5 @@ class Axis {
       .setLineColor("black");
   }
 }
+
+export default Axis;

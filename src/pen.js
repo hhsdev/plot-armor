@@ -1,6 +1,6 @@
 "use strict";
 
-class Pen {
+export default class Pen {
   constructor() {
     this.html = '';
   }

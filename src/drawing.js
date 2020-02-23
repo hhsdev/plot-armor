@@ -1,6 +1,6 @@
 "use strict";
 
-class Drawing {
+export default class Drawing {
 	constructor(width, height) {
 		this.elementTagStart = '<svg width="' + width + '" height="' + height + '" xmlns="http://www.w3.org/2000/svg">';
 		this.elementTagEnd = '</svg>';

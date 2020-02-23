@@ -1,4 +1,9 @@
-class PlotLine {
+"use strict";
+import utils from './utils';
+import LinePen from './linePen';
+import PointGenerator from './pointGenerator';
+
+export default class PlotLine {
   constructor(config) {
     this.width = config.width || 300;
     this.height = config.height || 300;
@@ -14,7 +19,7 @@ class PlotLine {
 
     this.html = "";
 
-    this.color = config.color || randomColor();
+    this.color = config.color || utils.randomColor();
     this.pen = new LinePen().setThickness(1).setLineColor(this.color);
     this.pointGenerator = new PointGenerator(0, 0, this.width, this.height);
   }

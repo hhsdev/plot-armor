@@ -1,6 +1,7 @@
 "use strict";
+import Pen from './pen';
 
-class LinePen extends Pen {
+export default class LinePen extends Pen {
   constructor() {
     super();
     this.actions = [];

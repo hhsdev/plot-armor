@@ -6,24 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/index.css" />
   <title>Document</title>
-
-  <script src="src/utils.js"></script>
-  <script src="src/config.js"></script>
-  <script src="src/pointGenerator.js"></script>
-  <script src="src/pointGenerator1D.js"></script>
-
-  <script src="src/pen.js"></script>
-  <script src="src/linePen.js"></script>
-  <script src="src/textPen.js"></script>
-
-  <script src="src/drawing.js"></script>
-  <script src="src/axis.js"></script>
-  <script src="src/plotLine.js"></script>
-  <script src="src/graph.js"></script>
-  <script src="src/plotArmor.js"></script>
+  <script src="bundle.min.js"></script>
   <script>
     window.onload = function () {
-      const g = plotArmor.create();
+      const g = new Graph();
       const arr = []
       for (let i = 0; i < 180; ++i) { arr.push(i); }
       const sinData = arr.map((num) => {

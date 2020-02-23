@@ -1,6 +1,11 @@
 "use strict";
+import Axis from './axis';
+import Drawing from './drawing';
+import PointGenerator from './pointGenerator';
+import LinePen from './linePen';
+import PlotLine from './plotLine';
 
-class Graph {
+export default class Graph {
   constructor(config) {
     config = config || {};
     this.width = config.width || 600;

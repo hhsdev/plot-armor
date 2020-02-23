@@ -1,14 +1,13 @@
 "use strict";
 
-class PointGenerator1D {
+export default class PointGenerator1D {
   constructor(orientation, x0, y0, x1, y1) {
     if (orientation === "horizontal") {
       this.isHorizontal = true;
     } else if (orientation === "vertical") {
       this.isHorizontal = false;
     } else {
-      console.log("Error: unregconized orientation: " + orientation);
-      console.trace('');
+      console.trace("Error: unregconized orientation: " + orientation);
     }
 
     this.x0 = x0;

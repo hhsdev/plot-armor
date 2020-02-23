@@ -1,6 +1,6 @@
 "use strict";
-
-class TextPen extends Pen {
+import Pen from './pen';
+export default class TextPen extends Pen {
   constructor() {
     super();
     this.reset();

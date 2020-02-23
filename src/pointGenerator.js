@@ -1,6 +1,6 @@
 "use strict";
 
-class PointGenerator {
+export default class PointGenerator {
   constructor(x0, y0, x1, y1) {
     this.x0 = x0;
     this.y0 = y0;
