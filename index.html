@@ -15,8 +15,15 @@
       const sinData = arr.map((num) => {
         return { x: num * 3, y: (Math.sin(num / (2 * Math.PI)) * 100) + 120 }
       });
-      g.newPlotLine(sinData, "red");
+      //g.newPlotLine(sinData, "red");
+      g.newPlotLine([], "red");
       g.draw();
+      let x = 0, y = 0;
+      setInterval(() => {
+        g.plotLines[0].addData({x, y});
+        x += 30;
+        y += 30;
+      }, 500);
       g.attachTo(document.getElementById('bdy'));
     };
   </script>

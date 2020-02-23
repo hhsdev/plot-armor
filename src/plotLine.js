@@ -1,7 +1,7 @@
 "use strict";
-import utils from './utils';
-import LinePen from './linePen';
-import PointGenerator from './pointGenerator';
+import utils from "./utils";
+import LinePen from "./linePen";
+import PointGenerator from "./pointGenerator";
 
 export default class PlotLine {
   constructor(config) {
@@ -40,5 +40,15 @@ export default class PlotLine {
       x: this.xOffset + point.x * (this.width / this.maxX),
       y: this.height - (this.yOffset + point.y * (this.height / this.maxY))
     };
+  }
+
+  addData(newData) {
+    for (let path of this.pen.paths) {
+      const parent = path.parentNode;
+      parent.removeChild(path);
+    }
+    this.pen.paths = [];
+    this.dataset.push(newData);
+    this.draw();
   }
 }
