@@ -2,7 +2,7 @@
 import LinePen from "./linePen";
 import TextPen from "./textPen";
 import PointGenerator1D from "./pointGenerator1D";
-import utils from './utils';
+import utils from "./utils";
 
 class Axis {
   constructor(config) {
@@ -19,6 +19,8 @@ class Axis {
     this.majorTickSize = config.majorTickSize || 10;
     this.minorTickSize = config.minorTickSize || 5;
 
+    this.spaceForTickText = 30;
+
     this.pen = new LinePen().setThickness(1).setLineColor("black");
     this.pointGenerator = new PointGenerator1D(
       this.orientation,
@@ -33,20 +35,21 @@ class Axis {
     this._drawLine();
     this._drawLabel();
     this._drawTicks();
+    this._drawTickTexts();
     this._drawGridLines();
   }
 
   _drawLine() {
     const startPoint = this.pointGenerator
-      .fromBaseStartCorner(this.padding)
+      .fromBaseStartCorner(this.padding + this.spaceForTickText)
       .generate();
 
     const endPoint = this.pointGenerator
-      .fromBaseEndCorner(this.padding)
+      .fromBaseBorder(this.padding + this.spaceForTickText)
+      .fromEndBorder(this.padding)
       .generate();
 
-    this.pen.startAt(startPoint).lineTo(endPoint);
-    this.pen.drawOn(this.drawing);
+    this.pen.startAt(startPoint).lineTo(endPoint).drawOn(this.drawing);
   }
 
   _drawLabel() {
@@ -95,18 +98,18 @@ class Axis {
   }
 
   _drawTicks() {
-    const axisLength = this.width - 2 * this.padding;
+    const axisLength = this.width - (2 * this.padding + this.spaceForTickText);
     const distanceBetweenTicks = axisLength / this.ticks;
 
     for (let i = 0; i < this.ticks + 1; i += 1) {
       if (i % this.minorTicksPerMajorTick === 0) {
         this._drawTick(
-          i * distanceBetweenTicks + this.padding,
+          i * distanceBetweenTicks + this.padding + this.spaceForTickText,
           this.majorTickSize
         );
       } else {
         this._drawTick(
-          i * distanceBetweenTicks + this.padding,
+          i * distanceBetweenTicks + this.padding + this.spaceForTickText,
           this.minorTickSize
         );
       }
@@ -117,22 +120,24 @@ class Axis {
   _drawTick(lengthAlongAxis, tickSize) {
     const startPoint = this.pointGenerator
       .fromStartBorder(lengthAlongAxis)
-      .fromBaseBorder(this.padding)
+      .fromBaseBorder(this.padding + this.spaceForTickText)
       .generate();
 
     const endPoint = this.pointGenerator
       .fromStartBorder(lengthAlongAxis)
-      .fromBaseBorder(this.padding - tickSize)
+      .fromBaseBorder(this.padding + this.spaceForTickText - tickSize)
       .generate();
     this.pen.startAt(startPoint).lineTo(endPoint);
   }
 
   _drawGridLines() {
-    const axisLength = this.height - 2 * this.padding;
+    const axisLength = this.width - (2 * this.padding + this.spaceForTickText);
     const distanceBetweenTicks = axisLength / this.ticks;
     for (let i = 0; i < this.ticks; i += this.minorTicksPerMajorTick) {
       if (i !== 0) {
-        this._drawGridLine(i * distanceBetweenTicks + this.padding);
+        this._drawGridLine(
+          i * distanceBetweenTicks + this.padding + this.spaceForTickText
+        );
       }
     }
     this.pen.drawOn(this.drawing);
@@ -141,7 +146,7 @@ class Axis {
   _drawGridLine(lengthAlongAxis) {
     const startPoint = this.pointGenerator
       .fromStartBorder(lengthAlongAxis)
-      .fromBaseBorder(this.padding)
+      .fromBaseBorder(this.padding + this.spaceForTickText)
       .generate();
 
     const endPoint = this.pointGenerator
@@ -157,6 +162,8 @@ class Axis {
       .setSolid()
       .setLineColor("black");
   }
+
+  _drawTickTexts() {}
 }
 
 export default Axis;

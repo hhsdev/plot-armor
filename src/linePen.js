@@ -28,6 +28,7 @@ export default class LinePen extends Pen {
     }
     this.paths = [];
   }
+
   setPathAttributes() {
     this.currentPath.setAttribute("stroke-width", this.thickness);
     this.currentPath.setAttribute("stroke", this.lineColor);

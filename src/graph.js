@@ -96,19 +96,41 @@ export default class Graph {
       .drawOn(this.drawing);
   }
 
-  newPlotLine(dataset, color) {
+  newPlotLine(dataset, color, animate = false) {
     const { width, height, drawing } = this;
-    const plotLine = new PlotLine({
-      width,
-      height,
-      maxX: this.width,
-      maxY: this.height,
-      dataset,
-      drawing,
-      xOffset: 30,
-      yOffset: 30,
-      color
-    });
-    this.plotLines.push(plotLine);
+    if (animate) {
+      this.plotLines.push(new PlotLine({
+        width: 510,
+        height: 510,
+        maxX: 537,
+        maxY: 537,
+        dataset: [],
+        drawing,
+        xOffset: 60,
+        yOffset: 60,
+        color
+      }));
+      if (dataset.length == 0) return;
+      let i = 0;
+      const plotLine = this.plotLines[this.plotLines.length - 1];
+      const interval = setInterval(() => {
+        if (i >= dataset.length - 1) clearInterval(interval);
+        plotLine.addData(dataset[i]);
+        ++i;
+      }, 5);
+    } else {
+      const plotLine = new PlotLine({
+        width: 510,
+        height: 510,
+        maxX: 537,
+        maxY: 537,
+        dataset,
+        drawing,
+        xOffset: 60,
+        yOffset: 60,
+        color
+      });
+      this.plotLines.push(plotLine);
+    }
   }
 }

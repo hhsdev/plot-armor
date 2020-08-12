@@ -12,18 +12,22 @@
       const g = new Graph();
       const arr = []
       for (let i = 0; i < 180; ++i) { arr.push(i); }
+
       const sinData = arr.map((num) => {
         return { x: num * 3, y: (Math.sin(num / (2 * Math.PI)) * 100) + 120 }
       });
-      //g.newPlotLine(sinData, "red");
-      g.newPlotLine([], "red");
+      const cosData = arr.map((num) => {
+        return { x: num * 3, y: (Math.cos(num / (2 * Math.PI)) * 100) + 120 }
+      });
+      const greenwich = arr.map((num) => {
+        return { x: num * 3, y: num }
+      });
+
+      g.newPlotLine(sinData, "red", true);
+      g.newPlotLine(greenwich, "green", true);
+      g.newPlotLine(cosData, "blue", true);
+
       g.draw();
-      let i =0;
-      const interval = setInterval(() => {
-        if (i >= sinData.length - 1) clearInterval(interval);
-        g.plotLines[0].addData(sinData[i]);
-        ++i;
-      }, 50);
       g.attachTo(document.getElementById('bdy'));
     };
   </script>

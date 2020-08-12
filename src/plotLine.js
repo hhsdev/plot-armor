@@ -7,6 +7,7 @@ export default class PlotLine {
   constructor(config) {
     this.width = config.width || 300;
     this.height = config.height || 300;
+    console.log(this.width, this.height);
 
     this.maxX = config.maxX || 300;
     this.maxY = config.maxY || 300;

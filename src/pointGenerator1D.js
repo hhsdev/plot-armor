@@ -36,15 +36,6 @@ export default class PointGenerator1D {
     return this;
   }
 
-  fromBaseBorder(distance) {
-    if (this.isHorizontal) {
-      this.y = this.y1 - distance;
-    } else {
-      this.x = this.x0 + distance;
-    }
-    return this;
-  }
-
   fromTopBorder(distance) {
     if (this.isHorizontal) {
       this.y = this.y0 + distance;
@@ -58,15 +49,6 @@ export default class PointGenerator1D {
     if (this.isHorizontal) {
       this.x = this.x0 + distance;
     } else {
-      this.y = this.y0 + distance;
-    }
-    return this;
-  }
-
-  fromEndBorder(distance) {
-    if (this.isHorizontal) {
-      this.x = this.x1 - distance;
-    } else {
       this.y = this.y1 - distance;
     }
     return this;
@@ -76,48 +58,38 @@ export default class PointGenerator1D {
     return { x: this.x, y: this.y };
   }
 
-  fromBaseStartCorner(delta) {
+  fromBaseBorder(distance) {
     if (this.isHorizontal) {
-      this.x = this.x0 + delta;
-      this.y = this.y1 - delta;
+      this.y = this.y1 - distance;
     } else {
-      this.x = this.x0 + delta;
-      this.y = this.y0 + delta;
+      this.x = this.x0 + distance;
     }
     return this;
+  }
+
+  fromEndBorder(distance) {
+    if (this.isHorizontal) {
+      this.x = this.x1 - distance;
+    } else {
+      this.y = this.y0 + distance;
+    }
+    return this;
+  }
+
+  fromBaseStartCorner(delta) {
+    return this.fromBaseBorder(delta).fromStartBorder(delta);
   }
 
   fromBaseEndCorner(delta) {
-    if (this.isHorizontal) {
-      this.x = this.x1 - delta;
-      this.y = this.y1 - delta;
-    } else {
-      this.x = this.x0 + delta;
-      this.y = this.y1 - delta;
-    }
-    return this;
+    return this.fromBaseBorder(delta).fromEndCorner(delta);
   }
 
   fromTopStartCorner(delta) {
-    if (this.isHorizontal) {
-      this.x = this.x1 + delta;
-      this.y = this.y0 + delta;
-    } else {
-      this.x = this.x1 - delta;
-      this.y = this.y0 + delta;
-    }
-    return this;
+    return this.fromTopBorder(delta).fromStartCorner(delta);
   }
 
   fromTopEndCorner(delta) {
-    if (this.isHorizontal) {
-      this.x = this.x1 - delta;
-      this.y = this.y0 + delta;
-    } else {
-      this.x = this.x1 - delta;
-      this.y = this.y0 + delta;
-    }
-    return this;
+    return this.fromTopBorder(delta).fromEndBorder(delta);
   }
 
   fromHalfMajorAxis(delta) {
