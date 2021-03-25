@@ -81,11 +81,11 @@ export default class PointGenerator1D {
   }
 
   fromBaseEndCorner(delta) {
-    return this.fromBaseBorder(delta).fromEndCorner(delta);
+    return this.fromBaseBorder(delta).fromEndBorder(delta);
   }
 
   fromTopStartCorner(delta) {
-    return this.fromTopBorder(delta).fromStartCorner(delta);
+    return this.fromTopBorder(delta).fromStartBorder(delta);
   }
 
   fromTopEndCorner(delta) {
