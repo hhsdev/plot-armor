@@ -1,9 +1,13 @@
 "use strict";
-import Axis from './axis';
-import Drawing from './drawing';
-import PointGenerator from './pointGenerator';
-import LinePen from './linePen';
-import PlotLine from './plotLine';
+import Axis from "./axis";
+import Drawing from "./drawing";
+import PointGenerator from "./pointGenerator";
+import LinePen from "./linePen";
+import PlotLine from "./plotLine";
+import GridLines from "./gridLines";
+import Ticks from "./ticks";
+import { Rect } from "./rect";
+import AxisLabel from "./axisLabel";
 
 export default class Graph {
   constructor(config) {
@@ -13,61 +17,89 @@ export default class Graph {
     this.padding = config.padding || 30;
     this.drawing = config.drawing || new Drawing(this.width, this.height);
 
-    this.xAxis = this.createXAxis(config);
-    this.yAxis = this.createYAxis(config);
+    const padding = 30;
+    const spaceForLabels = 30;
+    const mainRect = new Rect({
+      x0: padding + spaceForLabels,
+      y0: padding,
+      x1: this.width - padding,
+      y1: this.height - (padding + spaceForLabels)
+    });
+
+    const xLabelRegion = new Rect({
+      x0: padding + spaceForLabels,
+      y0: this.height - padding - spaceForLabels,
+      x1: this.width - padding,
+      y0: this.height - padding,
+    });
+
+    const yLabelRegion = new Rect({
+      x0: padding,
+      y0: padding,
+      x1: padding + spaceForLabels,
+      y1: this.height - (padding + spaceForLabels)
+    });
+
+    this.items = [
+      new Ticks({
+        drawing: this.drawing,
+        orientation: "vertical",
+        rect: mainRect
+      }),
+      new Ticks({
+        drawing: this.drawing,
+        orientation: "horizontal",
+        rect: mainRect
+      }),
+      new GridLines({
+        drawing: this.drawing,
+        orientation: "vertical",
+        rect: mainRect
+      }),
+      new GridLines({
+        drawing: this.drawing,
+        orientation: "horizontal",
+        rect: mainRect
+      }),
+      new Axis({
+        rect: mainRect,
+        orientation: "vertical",
+        drawing: this.drawing
+      }),
+      new Axis({
+        rect: mainRect,
+        orientation: "horizontal",
+        drawing: this.drawing
+      }),
+      new AxisLabel({
+        rect: yLabelRegion,
+        orientation: "vertical",
+        drawing: this.drawing,
+        label: "Y Axis",
+      }),
+      new AxisLabel({
+        rect: xLabelRegion,
+        orientation: "horizontal",
+        drawing: this.drawing,
+        label: "X Axis",
+      })
+    ];
 
     this.pointGenerator = new PointGenerator(0, 0, this.width, this.height);
     this.pen = new LinePen().setThickness(1).setLineColor("black");
     this.plotLines = [];
   }
 
-  createXAxis(config) {
-    let xAxisConfig = config.xAxis;
-    if (!xAxisConfig) {
-      xAxisConfig = {
-        xOffset: 30,
-        yOffset: 30,
-        fontSize: 16,
-        labels: ['a', 'b', 'c', 'd', 'e'],
-      };
-    }
-    xAxisConfig.drawing = this.drawing;
-    xAxisConfig.orientation = "horizontal";
-    xAxisConfig.label = xAxisConfig.label || "X-Axis";
-    xAxisConfig.width = xAxisConfig.width || this.width;
-    xAxisConfig.height = xAxisConfig.height || this.height;
-    xAxisConfig.padding = xAxisConfig.padding || this.padding;
-
-    return new Axis(xAxisConfig);
-  }
-
-  createYAxis(config) {
-    let yAxisConfig = config.yAxis;
-    if (!yAxisConfig) {
-      yAxisConfig = {
-        xOffset: 30,
-        yOffset: 30,
-        fontSize: 16,
-        labels: ['a', 'b', 'c', 'd', 'e'],
-      };
-    }
-    yAxisConfig.drawing = this.drawing;
-    yAxisConfig.orientation = "vertical";
-    yAxisConfig.label = yAxisConfig.label || "Y-Axis";
-    yAxisConfig.width = yAxisConfig.width || this.width;
-    yAxisConfig.height = yAxisConfig.height || this.height;
-    yAxisConfig.padding = yAxisConfig.padding || this.padding;
-
-    return new Axis(yAxisConfig);
-  }
+  computeRegions() {}
 
   attachTo(container) {
     this.drawing.attachTo(container);
   }
 
   draw() {
-    this.yAxis.draw();
-    this.xAxis.draw();
+    for (const item of this.items) {
+      item.draw();
+    }
     for (let plotLine of this.plotLines) {
       plotLine.draw();
     }
@@ -78,7 +110,7 @@ export default class Graph {
       this.pointGenerator.fromTopLeftCorner(this.padding).generate(),
       this.pointGenerator.fromTopRightCorner(this.padding).generate(),
       this.pointGenerator.fromBottomRightCorner(this.padding).generate(),
-      this.pointGenerator.fromBottomLeftCorner(this.padding).generate()
+      this.pointGenerator.fromBottomLeftCorner(this.padding).generate(),
     ];
 
     this.pen
@@ -93,17 +125,19 @@ export default class Graph {
   newPlotLine(dataset, color, animate = false) {
     const { width, height, drawing } = this;
     if (animate) {
-      this.plotLines.push(new PlotLine({
-        width: 510,
-        height: 510,
-        maxX: 537,
-        maxY: 537,
-        dataset: [],
-        drawing,
-        xOffset: 60,
-        yOffset: 60,
-        color
-      }));
+      this.plotLines.push(
+        new PlotLine({
+          width: 510,
+          height: 510,
+          maxX: 537,
+          maxY: 537,
+          dataset: [],
+          drawing,
+          xOffset: 60,
+          yOffset: 60,
+          color,
+        })
+      );
       if (dataset.length == 0) return;
       let i = 0;
       const plotLine = this.plotLines[this.plotLines.length - 1];
@@ -122,7 +156,7 @@ export default class Graph {
         drawing,
         xOffset: 60,
         yOffset: 60,
-        color
+        color,
       });
       this.plotLines.push(plotLine);
     }
