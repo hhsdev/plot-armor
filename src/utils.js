@@ -14,6 +14,19 @@ const utils = {
   randomColor: () => {
     const randomColorComponent = () => Math.floor(Math.random() * 256);
     return `rgb(${randomColorComponent()}, ${randomColorComponent()}, ${randomColorComponent()})`;
-  }
+  },
+
+  getDefault: (object, path, defaultVal=undefined) => {
+    keys = path.split(".");
+    if (keys.length == 0) return defaultVal;
+    ret = object;
+    for (const key of keys) {
+      if (ret && Object.hasOwnProperty(ret, key))
+        ret = ret[key];
+      else
+        return defaultVal;
+    }
+    return ret;
+  },
 };
 export default utils;
