@@ -1,33 +1,29 @@
 "use strict";
 
 export default class CardinalPointGenerator {
-  constructor(x0, y0, x1, y1) {
-    this._x0 = x0;
-    this._y0 = y0;
-    this._x1 = x1;
-    this._y1 = y1;
-
+  constructor(rect) {
+    this._rect = rect;
     this.x = 0;
     this.y = 0;
   }
 
   fromNorthBorder(offset = 0) {
-    this.y = this._y0 + offset;
+    this.y = this._rect.y0 + offset;
     return this;
   }
 
   fromSouthBorder(offset = 0) {
-    this.y = this._y1 - offset;
+    this.y = this._rect.y1 - offset;
     return this;
   }
 
   fromEastBorder(offset = 0) {
-    this.x = this._x1 - offset;
+    this.x = this._rect.x1 - offset;
     return this;
   }
 
   fromWestBorder(offset = 0) {
-    this.x = this._x0 + offset;
+    this.x = this._rect.x0 + offset;
     return this;
   }
 
@@ -48,8 +44,8 @@ export default class CardinalPointGenerator {
   }
 
   fromCenter(deltaX, deltaY) {
-    const centerX = (this._x0 + this._x1) / 2;
-    const centerY = (this._y0 + this._y1) / 2;
+    const centerX = (this._rect.x0 + this._rect.x1) / 2;
+    const centerY = (this._rect.y0 + this._rect.y1) / 2;
 
     this.x = centerX + deltaX;
     this.y = centerY + deltaY;
