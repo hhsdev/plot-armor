@@ -1,8 +1,9 @@
 "use strict";
 import LinePen from "./linePen";
 import TextPen from "./textPen";
-import CardinalPointGenerator from "./cardinalPointGenerator";
+import PointGenerator from "./pointGenerator";
 import utils from "./utils";
+import { Rect } from "./rect";
 
 class Axis {
   constructor(config) {
@@ -22,12 +23,14 @@ class Axis {
     this.spaceForLables = 50;
 
     this.pen = new LinePen().setThickness(1).setLineColor("black");
-    this.pointGenerator = new CardinalPointGenerator(
-      this.padding + this.spaceForLables,
-      this.padding,
-      this.canvasWidth - this.padding,
-      this.canvasHeight - (this.padding + this.spaceForLables)
-    );
+    const rect = new Rect({
+      x0: this.padding + this.spaceForLables,
+      y0: this.padding,
+      x1: this.canvasWidth - this.padding,
+      y1: this.canvasHeight - (this.padding + this.spaceForLables)
+    });
+
+    this.pointGenerator = new PointGenerator(rect);
     this.width = this.canvasWidth - (2 * this.padding + this.spaceForLables);
     this.height = this.canvasHeight - (2 * this.padding + this.spaceForLables);
   }
@@ -43,11 +46,11 @@ class Axis {
   _drawAxisLine() {
     let startPoint, endPoint;
     if (this.orientation === "horizontal") {
-      startPoint = this.pointGenerator.fromSouthWestCorner().generate();
-      endPoint = this.pointGenerator.fromSouthEastCorner().generate();
+      startPoint = this.pointGenerator.fromBottomLeftCorner().generate();
+      endPoint = this.pointGenerator.fromBottomRightCorner().generate();
     } else {
-      startPoint = this.pointGenerator.fromSouthWestCorner().generate();
-      endPoint = this.pointGenerator.fromNorthWestCorner().generate();
+      startPoint = this.pointGenerator.fromBottomLeftCorner().generate();
+      endPoint = this.pointGenerator.fromTopLeftCorner().generate();
     }
     this.pen.startAt(startPoint).lineTo(endPoint).drawOn(this.drawing);
   }
@@ -68,7 +71,7 @@ class Axis {
     const offset = -Math.round(textMetrics.width / 2);
     const textStartPoint = this.pointGenerator
       .fromCenter(offset, 0)
-      .fromSouthBorder(-(this.fontSize + this.tickSize + 20))
+      .fromBottomBorder(-(this.fontSize + this.tickSize + 20))
       .generate();
 
     new TextPen()
@@ -87,7 +90,7 @@ class Axis {
 
     const textStartPoint = this.pointGenerator
       .fromCenter(0, offset)
-      .fromWestBorder(- this.fontSize - 20)
+      .fromLeftBorder(- this.fontSize - 20)
       .generate();
 
     new TextPen()
@@ -112,21 +115,21 @@ class Axis {
     let startPoint, endPoint;
     if (this.orientation === "horizontal") {
       startPoint = this.pointGenerator
-        .fromWestBorder(lengthAlongAxis)
-        .fromSouthBorder(0)
+        .fromLeftBorder(lengthAlongAxis)
+        .fromBottomBorder(0)
         .generate();
       endPoint = this.pointGenerator
-        .fromWestBorder(lengthAlongAxis)
-        .fromSouthBorder(-tickSize)
+        .fromLeftBorder(lengthAlongAxis)
+        .fromBottomBorder(-tickSize)
         .generate();
     } else {
       startPoint = this.pointGenerator
-        .fromSouthBorder(lengthAlongAxis)
-        .fromWestBorder(0)
+        .fromBottomBorder(lengthAlongAxis)
+        .fromLeftBorder(0)
         .generate();
       endPoint = this.pointGenerator
-        .fromSouthBorder(lengthAlongAxis)
-        .fromWestBorder(-tickSize)
+        .fromBottomBorder(lengthAlongAxis)
+        .fromLeftBorder(-tickSize)
         .generate();
     }
     this.pen.startAt(startPoint).lineTo(endPoint);
@@ -146,21 +149,21 @@ class Axis {
     let startPoint, endPoint;
     if (this.orientation === "horizontal") {
       startPoint = this.pointGenerator
-        .fromWestBorder(lengthAlongAxis)
-        .fromSouthBorder(0)
+        .fromLeftBorder(lengthAlongAxis)
+        .fromBottomBorder(0)
         .generate();
       endPoint = this.pointGenerator
-        .fromWestBorder(lengthAlongAxis)
-        .fromNorthBorder(0)
+        .fromLeftBorder(lengthAlongAxis)
+        .fromTopBorder(0)
         .generate();
     } else {
       startPoint = this.pointGenerator
-        .fromSouthBorder(lengthAlongAxis)
-        .fromWestBorder(0)
+        .fromBottomBorder(lengthAlongAxis)
+        .fromLeftBorder(0)
         .generate();
       endPoint = this.pointGenerator
-        .fromSouthBorder(lengthAlongAxis)
-        .fromEastBorder(0)
+        .fromBottomBorder(lengthAlongAxis)
+        .fromRightBorder(0)
         .generate();
     }
     this.pen
