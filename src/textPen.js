@@ -21,6 +21,11 @@ export default class TextPen extends Pen {
     return this;
   }
 
+  setColor(color) {
+    this.text.style.fill = color;
+    return this;
+  }
+
   setPostion(point) {
     this.point = point;
     return this;
