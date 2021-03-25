@@ -21,7 +21,7 @@ export default class PlotLine {
     this.html = "";
 
     this.color = config.color || utils.randomColor();
-    this.pen = new LinePen().setThickness(1).setLineColor(this.color);
+    this.pen = new LinePen().setThickness(1.8).setLineColor(this.color);
     this.pointGenerator = new PointGenerator(0, 0, this.width, this.height);
   }
 

@@ -6,29 +6,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/index.css" />
   <title>Document</title>
-  <script src="bundle.js"></script>
+  <script src="bundle.min.js"></script>
   <script>
     window.onload = function () {
       const g = new Graph();
+      g.attachTo(document.getElementById('bdy'));
       const arr = []
       for (let i = 0; i < 180; ++i) { arr.push(i); }
 
       const sinData = arr.map((num) => {
-        return { x: num * 3, y: (Math.sin(num / (2 * Math.PI)) * 100) + 120 }
+        return { x: num * 3, y: (Math.sin(num / (4 * Math.PI)) * 100) + 120 }
       });
       const cosData = arr.map((num) => {
-        return { x: num * 3, y: (Math.cos(num / (2 * Math.PI)) * 100) + 120 }
+        return { x: num * 3, y: (Math.cos(num / (4 * Math.PI)) * 100) + 120 }
       });
       const greenwich = arr.map((num) => {
         return { x: num * 3, y: num }
       });
 
-      g.newPlotLine(sinData, "red", true);
-      g.newPlotLine(greenwich, "green", true);
-      g.newPlotLine(cosData, "blue", true);
+      g.newPlotLine(sinData, "#f42601", true);
+      g.newPlotLine(greenwich, "#81e979", true);
+      g.newPlotLine(cosData, "#449dd1", true);
 
       g.draw();
-      g.attachTo(document.getElementById('bdy'));
     };
   </script>
 </head>

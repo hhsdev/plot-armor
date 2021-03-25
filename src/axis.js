@@ -8,28 +8,28 @@ class Axis {
   constructor(config) {
     this.orientation = config.orientation; // TODO: not having this is an error
     this.label = config.label || "";
-    this.lables = config.lables || [];
+    this.labels = config.labels || [];
 
     this.drawing = config.drawing; // TODO: not having this is an error
-    this.width = config.width || 600;
-    this.height = config.height || 600;
+    this.canvasWidth = config.width || 600;
+    this.canvasHeight = config.height || 600;
 
     this.padding = config.padding || 30;
     this.fontSize = config.fontSize || 16;
-    this.ticks = config.ticks || 28;
-    this.minorTicksPerMajorTick = 5;
-    this.majorTickSize = 5;
-    this.minorTickSize = 0;
+    this.ticks = this.labels.length;
+    this.tickSize = config.tickSize || 5;
 
-    this.spaceForTickText = 30;
+    this.spaceForLables = 50;
 
     this.pen = new LinePen().setThickness(1).setLineColor("black");
     this.pointGenerator = new CardinalPointGenerator(
-      this.padding + this.spaceForTickText,
+      this.padding + this.spaceForLables,
       this.padding,
-      this.width - this.padding,
-      this.height - (this.padding + this.spaceForTickText)
+      this.canvasWidth - this.padding,
+      this.canvasHeight - (this.padding + this.spaceForLables)
     );
+    this.width = this.canvasWidth - (2 * this.padding + this.spaceForLables);
+    this.height = this.canvasHeight - (2 * this.padding + this.spaceForLables);
   }
 
   draw() {
@@ -68,7 +68,7 @@ class Axis {
     const offset = -Math.round(textMetrics.width / 2);
     const textStartPoint = this.pointGenerator
       .fromCenter(offset, 0)
-      .fromSouthBorder(-this.fontSize - this.majorTickSize)
+      .fromSouthBorder(-(this.fontSize + this.tickSize + 20))
       .generate();
 
     new TextPen()
@@ -87,27 +87,24 @@ class Axis {
 
     const textStartPoint = this.pointGenerator
       .fromCenter(0, offset)
-      .fromWestBorder(-this.fontSize)
+      .fromWestBorder(- this.fontSize - 20)
       .generate();
 
     new TextPen()
       .setText(this.label)
+      .setColor("purple")
       .setPostion(textStartPoint)
       .rotate(-90, textStartPoint)
       .drawOn(this.drawing);
   }
 
   _drawTicks() {
-    const axisLength = this.width - (2 * this.padding + this.spaceForTickText);
-    const distanceBetweenTicks = axisLength / this.ticks;
+    const distanceBetweenTicks = this.width / this.ticks;
 
     for (let i = 0; i < this.ticks + 1; i += 1) {
-      if (i % this.minorTicksPerMajorTick === 0) {
-        this._drawTick(i * distanceBetweenTicks, this.majorTickSize);
-      } else {
-        this._drawTick(i * distanceBetweenTicks, this.minorTickSize);
-      }
+      this._drawTick(i * distanceBetweenTicks, this.tickSize);
     }
+
     this.pen.drawOn(this.drawing);
   }
 
@@ -136,9 +133,8 @@ class Axis {
   }
 
   _drawGridLines() {
-    const axisLength = this.width - (2 * this.padding + this.spaceForTickText);
-    const distanceBetweenTicks = axisLength / this.ticks;
-    for (let i = 0; i < this.ticks; i += this.minorTicksPerMajorTick) {
+    const distanceBetweenTicks = this.width / this.ticks;
+    for (let i = 0; i < this.ticks; ++i) {
       if (i !== 0) {
         this._drawGridLine(i * distanceBetweenTicks);
       }

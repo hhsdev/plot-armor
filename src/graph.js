@@ -28,10 +28,7 @@ export default class Graph {
         xOffset: 30,
         yOffset: 30,
         fontSize: 16,
-        ticks: 28,
-        minorTicksPerMajorTick: 4,
-        majorTickSize: 10,
-        minorTickSize: 5
+        labels: ['a', 'b', 'c', 'd', 'e'],
       };
     }
     xAxisConfig.drawing = this.drawing;
@@ -51,10 +48,7 @@ export default class Graph {
         xOffset: 30,
         yOffset: 30,
         fontSize: 16,
-        ticks: 28,
-        minorTicksPerMajorTick: 4,
-        majorTickSize: 10,
-        minorTickSize: 5
+        labels: ['a', 'b', 'c', 'd', 'e'],
       };
     }
     yAxisConfig.drawing = this.drawing;
