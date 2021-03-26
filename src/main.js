@@ -1,3 +1,4 @@
-import graph from './graph';
+import Graph from "./graph";
+import { Rect } from "./rect";
 
-export default graph;
+export default { Graph, Rect };

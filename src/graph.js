@@ -12,6 +12,7 @@ import AxisLabel from "./axisLabel";
 export default class Graph {
   constructor(config) {
     config = config || {};
+    this.viewBox = config.viewBox;
     this.width = config.width || 600;
     this.height = config.height || 600;
     this.padding = config.padding || 30;
@@ -19,6 +20,7 @@ export default class Graph {
 
     const padding = 30;
     const spaceForLabels = 30;
+
     const mainRect = new Rect({
       x0: padding + spaceForLabels,
       y0: padding,
@@ -39,6 +41,8 @@ export default class Graph {
       x1: padding + spaceForLabels,
       y1: this.height - (padding + spaceForLabels)
     });
+
+    this.mainRect = mainRect;
 
     this.items = [
       new Ticks({
@@ -123,18 +127,14 @@ export default class Graph {
   }
 
   newPlotLine(dataset, color, animate = false) {
-    const { width, height, drawing } = this;
+    const { drawing } = this;
     if (animate) {
       this.plotLines.push(
         new PlotLine({
-          width: 510,
-          height: 510,
-          maxX: 537,
-          maxY: 537,
           dataset: [],
           drawing,
-          xOffset: 60,
-          yOffset: 60,
+          viewBox: this.viewBox,
+          rect: this.mainRect,
           color,
         })
       );
@@ -148,14 +148,10 @@ export default class Graph {
       }, 5);
     } else {
       const plotLine = new PlotLine({
-        width: 510,
-        height: 510,
-        maxX: 537,
-        maxY: 537,
-        dataset,
         drawing,
-        xOffset: 60,
-        yOffset: 60,
+        viewBox: this.viewBox,
+        rect: this.mainRect,
+        dataset,
         color,
       });
       this.plotLines.push(plotLine);

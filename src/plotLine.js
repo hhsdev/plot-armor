@@ -2,26 +2,21 @@
 import utils from "./utils";
 import LinePen from "./linePen";
 import PointGenerator from "./pointGenerator";
+import { Rect } from "./rect";
+import Point from "./point";
 
 export default class PlotLine {
   constructor(config) {
-    this.width = config.width || 300;
-    this.height = config.height || 300;
-    console.log(this.width, this.height);
-
-    this.maxX = config.maxX || 300;
-    this.maxY = config.maxY || 300;
+    this.srcRect = config.viewBox;
+    this.destRect = config.rect;
 
     this.dataset = config.dataset || [];
+    this.dataset = this.dataset.map(({x, y}) => new Point(x, y));
     this.drawing = config.drawing; // TODO: not having a drawing is an error
 
-    this.xOffset = config.xOffset || 30;
-    this.yOffset = config.yOffset || 30;
-
-    this.html = "";
 
     this.color = config.color || utils.randomColor();
-    this.pen = new LinePen().setThickness(1.8).setLineColor(this.color);
+    this.pen = new LinePen().setThickness(4).setLineColor(this.color);
     this.pointGenerator = new PointGenerator(0, 0, this.width, this.height);
   }
 
@@ -30,6 +25,9 @@ export default class PlotLine {
     this.pen.startAt(this.fitOnGraph(this.dataset[0]));
     for (let i = 1; i < this.dataset.length; ++i) {
       const coordinate = this.fitOnGraph(this.dataset[i]);
+      if (coordinate.isNaN()) {
+        continue;
+      }
       this.pen.lineTo(coordinate);
     }
 
@@ -37,15 +35,17 @@ export default class PlotLine {
   }
 
   fitOnGraph(point) {
-    return {
-      x: this.xOffset + point.x * (this.width / this.maxX),
-      y: this.height - (this.yOffset + point.y * (this.height / this.maxY))
-    };
+    if (point.isOutsideOf(this.srcRect)) return new Point(NaN, NaN);
+    let destPoint = utils.mapPoint(this.srcRect, point, this.destRect);
+    // Flip the y-axis;
+    destPoint.y = (this.destRect.y1 - destPoint.y) + this.destRect.y0;
+    if (destPoint.isOutsideOf(this.destRect)) return;
+    return destPoint;
   }
 
   addData(newData) {
     this.pen.removeAllPaths(true);
-    this.dataset.push(newData);
+    this.dataset.push(new Point(newData.x, newData.y));
     this.draw();
   }
 }

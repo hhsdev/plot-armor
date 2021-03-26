@@ -9,16 +9,20 @@
   <script src="bundle.min.js"></script>
   <script>
     window.onload = function () {
-      const g = new Graph();
+      const g = new Graph.Graph({
+        width: 800,
+        height: 600,
+        viewBox: new Graph.Rect({ x0: 0, x1: 2 * Math.PI, y0: -1, y1: 1 }),
+      });
       g.attachTo(document.getElementById('bdy'));
       const arr = []
-      for (let i = 0; i < 180; ++i) { arr.push(i); }
+      for (let i = 0; i < 2 * Math.PI; i += 0.05) { arr.push(i); }
 
       const sinData = arr.map((num) => {
-        return { x: num * 3, y: (Math.sin(num / (4 * Math.PI)) * 100) + 120 }
+        return { x: num, y: Math.sin(num) }
       });
       const cosData = arr.map((num) => {
-        return { x: num * 3, y: (Math.cos(num / (4 * Math.PI)) * 100) + 120 }
+        return { x: num, y: Math.cos(num) }
       });
       const greenwich = arr.map((num) => {
         return { x: num * 3, y: num }
