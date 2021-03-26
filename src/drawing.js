@@ -3,6 +3,8 @@
 export default class Drawing {
   constructor(width, height) {
     this.html = "";
+    this.width = width;
+    this.height = height;
 
     this.view = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.view.setAttribute("width", width);

@@ -16,7 +16,7 @@ export default class PlotLine {
 
 
     this.color = config.color || utils.randomColor();
-    this.pen = new LinePen().setThickness(4).setLineColor(this.color);
+    this.pen = new LinePen(this.drawing).setThickness(4).setLineColor(this.color);
     this.pointGenerator = new PointGenerator(0, 0, this.width, this.height);
   }
 
@@ -37,9 +37,6 @@ export default class PlotLine {
   fitOnGraph(point) {
     if (point.isOutsideOf(this.srcRect)) return new Point(NaN, NaN);
     let destPoint = utils.mapPoint(this.srcRect, point, this.destRect);
-    // Flip the y-axis;
-    destPoint.y = (this.destRect.y1 - destPoint.y) + this.destRect.y0;
-    if (destPoint.isOutsideOf(this.destRect)) return;
     return destPoint;
   }
 

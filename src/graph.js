@@ -23,23 +23,23 @@ export default class Graph {
 
     const mainRect = new Rect({
       x0: padding + spaceForLabels,
-      y0: padding,
+      y0: padding + spaceForLabels,
       x1: this.width - padding,
-      y1: this.height - (padding + spaceForLabels)
+      y1: this.height - padding,
     });
 
     const xLabelRegion = new Rect({
       x0: padding + spaceForLabels,
-      y0: this.height - padding - spaceForLabels,
+      y0: padding,
       x1: this.width - padding,
-      y0: this.height - padding,
+      y1: padding + spaceForLabels,
     });
 
     const yLabelRegion = new Rect({
       x0: padding,
-      y0: padding,
+      y0: padding + spaceForLabels,
       x1: padding + spaceForLabels,
-      y1: this.height - (padding + spaceForLabels)
+      y1: this.height - padding,
     });
 
     this.mainRect = mainRect;
@@ -90,7 +90,7 @@ export default class Graph {
     ];
 
     this.pointGenerator = new PointGenerator(0, 0, this.width, this.height);
-    this.pen = new LinePen().setThickness(1).setLineColor("black");
+    this.pen = new LinePen(this.drawing).setThickness(1).setLineColor("black");
     this.plotLines = [];
   }
 

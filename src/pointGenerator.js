@@ -27,12 +27,12 @@ export default class PointGenerator {
   }
 
   fromTopBorder(distance = 0) {
-    this.y = this.y0 + distance;
+    this.y = this.y1 - distance;
     return this;
   }
 
   fromBottomBorder(distance = 0) {
-    this.y = this.y1 - distance;
+    this.y = this.y0 + distance;
     return this;
   }
 

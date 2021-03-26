@@ -2,8 +2,9 @@
 import Pen from "./pen";
 
 export default class LinePen extends Pen {
-  constructor() {
-    super();
+  constructor(drawing) {
+    super(drawing);
+
     this.actions = [];
     this.thickness = 0;
     this.lineColor = "black";
@@ -70,12 +71,16 @@ export default class LinePen extends Pen {
   }
 
   startAt(point) {
-    this.actions.push(`M ${point.x}, ${point.y} `);
+    let { x, y } = point;
+    y = this._flipY(y);
+    this.actions.push(`M ${x}, ${y} `);
     return this;
   }
 
   lineTo(point) {
-    this.actions.push(`L ${point.x},${point.y} `);
+    let { x, y } = point;
+    y = this._flipY(y);
+    this.actions.push(`L ${x}, ${y} `);
     return this;
   }
 

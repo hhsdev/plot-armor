@@ -6,7 +6,7 @@ export default class GridLines {
   constructor(config) {
     this.orientation = config.orientation; // TODO: not having this is an error
     this.drawing = config.drawing; // TODO: not having this is an error
-    this.pen = new LinePen().setThickness(1);
+    this.pen = new LinePen(this.drawing).setThickness(1);
 
     this.rect = config.rect;
     this.pointGenerator = new PointGenerator(this.rect);

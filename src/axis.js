@@ -6,7 +6,7 @@ class Axis {
   constructor(config) {
     this.orientation = config.orientation; // TODO: not having this is an error
     this.drawing = config.drawing; // TODO: not having this is an error
-    this.pen = new LinePen().setThickness(1).setLineColor("black");
+    this.pen = new LinePen(this.drawing).setThickness(1).setLineColor("black");
     this.rect = config.rect;
     this.pointGenerator = new PointGenerator(this.rect);
   }

@@ -29,10 +29,10 @@ export default class AxisLabel {
     const offset = -Math.round(textMetrics.width / 2);
     const textStartPoint = this.pointGenerator
       .fromCenter(offset, 0)
-      .fromTopBorder(0)
+      .fromBottomBorder(0)
       .generate();
 
-    new TextPen()
+    new TextPen(this.drawing)
       .setText(this.label)
       .setColor("orange")
       .setPostion(textStartPoint)
@@ -51,7 +51,7 @@ export default class AxisLabel {
       .fromLeftBorder()
       .generate();
 
-    new TextPen()
+    new TextPen(this.drawing)
       .setText(this.label)
       .setColor("purple")
       .setPostion(textStartPoint)
