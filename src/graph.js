@@ -8,6 +8,8 @@ import GridLines from "./gridLines";
 import Ticks from "./ticks";
 import { Rect } from "./rect";
 import AxisLabel from "./axisLabel";
+import utils from "./utils";
+import GridLineLabels from "./gridLineLabels";
 
 export default class Graph {
   constructor(config) {
@@ -18,65 +20,125 @@ export default class Graph {
     this.padding = config.padding || 30;
     this.drawing = config.drawing || new Drawing(this.width, this.height);
 
+    this.yLabel = "Y axis";
+    this.xLabel = "X axis";
+    this.yLabels = this.normalizeLabels(config.yLabels);
+    this.xLabels = this.normalizeLabels(config.xLabels);
+
+    const spaceForYAxisLabel = utils.getTextMetrics(
+      this.yLabel,
+      `normal ${this.fontSize}px Arial`
+    ).height;
+
+    const spaceForXAxisLabel = utils.getTextMetrics(
+      this.xLabel,
+      `normal ${this.fontSize}px Arial`
+    ).height;
+
+    const spaceForYGridLabels = this.computeLongestLabelLength(this.yLabels);
+    const spaceForXGridLabels = utils.getTextMetrics(
+      this.xLabel,
+      `normal ${this.fontSize}px Arial`
+    ).height;
+
     const padding = 30;
-    const spaceForLabels = 30;
+    const spaceForXLabels =
+      2 *
+      utils.getTextMetrics(this.xLabel, `normal ${this.fontSize}px Arial`)
+        .height;
+    const spaceForYLabels = spaceForYAxisLabel + spaceForYGridLabels;
 
     const mainRect = new Rect({
-      x0: padding + spaceForLabels,
-      y0: padding + spaceForLabels,
+      x0: padding + spaceForYLabels,
+      y0: padding + spaceForXLabels,
       x1: this.width - padding,
       y1: this.height - padding,
     });
 
     const xLabelRegion = new Rect({
-      x0: padding + spaceForLabels,
+      x0: padding + spaceForYLabels,
       y0: padding,
       x1: this.width - padding,
-      y1: padding + spaceForLabels,
+      y1: padding + spaceForXAxisLabel,
     });
 
-    const yLabelRegion = new Rect({
-      x0: padding,
-      y0: padding + spaceForLabels,
-      x1: padding + spaceForLabels,
+    const xLabelsRegion = new Rect({
+      x0: padding + spaceForYLabels,
+      y0: padding + spaceForXAxisLabel,
+      x1: this.width - padding,
+      y1: padding + spaceForXAxisLabel + spaceForXGridLabels,
+    });
+
+    const yLabelsRegion = new Rect({
+      x0: padding + spaceForYAxisLabel,
+      y0: padding + spaceForXLabels,
+      x1: padding + spaceForYAxisLabel + spaceForYGridLabels,
       y1: this.height - padding,
     });
 
+    const yAxisLabelRegion = new Rect({
+      x0: padding,
+      y0: padding + spaceForXLabels,
+      x1: padding + spaceForYAxisLabel,
+      y1: this.height - padding,
+    });
     this.mainRect = mainRect;
 
     this.items = [
-      new Ticks({
+      new GridLineLabels({
         drawing: this.drawing,
         orientation: "vertical",
-        rect: mainRect
+        viewBox: this.viewBox,
+        rect: yLabelsRegion,
+        labels: this.yLabels,
+      }),
+      new GridLineLabels({
+        drawing: this.drawing,
+        orientation: "horizontal",
+        viewBox: this.viewBox,
+        rect: xLabelsRegion,
+        labels: this.xLabels,
       }),
       new Ticks({
         drawing: this.drawing,
+        viewBox: this.viewBox,
+        orientation: "vertical",
+        rect: mainRect,
+        labels: this.yLabels,
+      }),
+      new Ticks({
+        drawing: this.drawing,
+        viewBox: this.viewBox,
         orientation: "horizontal",
-        rect: mainRect
+        rect: mainRect,
+        labels: this.xLabels,
       }),
       new GridLines({
         drawing: this.drawing,
         orientation: "vertical",
-        rect: mainRect
+        viewBox: this.viewBox,
+        rect: mainRect,
+        labels: this.yLabels,
       }),
       new GridLines({
         drawing: this.drawing,
         orientation: "horizontal",
-        rect: mainRect
+        viewBox: this.viewBox,
+        rect: mainRect,
+        labels: this.xLabels,
       }),
       new Axis({
         rect: mainRect,
         orientation: "vertical",
-        drawing: this.drawing
+        drawing: this.drawing,
       }),
       new Axis({
         rect: mainRect,
         orientation: "horizontal",
-        drawing: this.drawing
+        drawing: this.drawing,
       }),
       new AxisLabel({
-        rect: yLabelRegion,
+        rect: yAxisLabelRegion,
         orientation: "vertical",
         drawing: this.drawing,
         label: "Y Axis",
@@ -86,7 +148,7 @@ export default class Graph {
         orientation: "horizontal",
         drawing: this.drawing,
         label: "X Axis",
-      })
+      }),
     ];
 
     this.pointGenerator = new PointGenerator(0, 0, this.width, this.height);
@@ -94,6 +156,27 @@ export default class Graph {
     this.plotLines = [];
   }
 
+  computeLongestLabelLength(labels) {
+    return labels
+      .map(
+        ({ label }) =>
+          utils.getTextMetrics(label, `normal ${this.fontSize}px Arial`).width
+      )
+      .reduce((curr_max, val) => {
+        if (curr_max < val) return val;
+        else return curr_max;
+      }, -Infinity);
+  }
+
+  normalizeLabels(labels) {
+    return labels.map((elem) => {
+      if (typeof elem === "number") {
+        return { at: elem, label: String(elem) };
+      } else {
+        return { at: Object.keys(elem)[0], label: Object.values(elem)[0] };
+      }
+    });
+  }
   computeRegions() {}
 
   attachTo(container) {

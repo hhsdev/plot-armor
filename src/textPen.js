@@ -9,6 +9,7 @@ export default class TextPen extends Pen {
     super();
     this.drawing = drawing;
     this.reset();
+    this.color = "black";
   }
 
   reset() {
@@ -24,27 +25,29 @@ export default class TextPen extends Pen {
   }
 
   setColor(color) {
-    this.text.style.fill = color;
+    this.color = color;
     return this;
   }
 
-  setPostion(point) {
-    this.point = point;
-    this.point.y = this._flipY(this.point.y);
+  setPosition(point) {
+    let { x, y } = point;
+    y = this._flipY(y);
+    this.point = new Point(x, y);
     return this;
   }
 
-  rotate(angle, pivot) {
-    if (pivot === undefined) pivot = new Point(0, 0);
-    pivot.y = this._flipY(pivot.y);
-    this.transforms.push(`rotate(${angle}, ${pivot.x}, ${pivot.y}) `);
+  rotate(angle, pivot = new Point(0, 0)) {
+    let { x, y } = pivot;
+    y = this._flipY(y);
+    this.transforms.push(`rotate(${angle}, ${x}, ${y}) `);
     return this;
   }
 
   translate(point) {
     let {x, y} = point;
-    y = this._flipY(y);
+    y *= -1;
     this.transforms.push(`translate(${x}, ${y}) `);
+    return this;
   }
 
   _commit() {
@@ -52,6 +55,7 @@ export default class TextPen extends Pen {
     this.text.setAttribute("class", "text-pen");
     this.text.setAttribute("x", this.point.x);
     this.text.setAttribute("y", this.point.y);
+    this.text.style.fill = this.color;
     this.text.setAttribute(
       "transform",
       this.transforms.reduce((accu, curr) => accu + curr, "")

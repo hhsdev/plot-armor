@@ -6,13 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/index.css" />
   <title>Document</title>
-  <script src="bundle.min.js"></script>
+  <script src="bundle.js"></script>
   <script>
     window.onload = function () {
       const g = new Graph.Graph({
         width: 800,
         height: 600,
         viewBox: new Graph.Rect({ x0: 0, x1: 2 * Math.PI, y0: -1, y1: 1 }),
+        yLabels: [ -1, -0.5, 0, 0.5, 1 ],
+        xLabels: [ 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6 ],
       });
       g.attachTo(document.getElementById('bdy'));
       const arr = []

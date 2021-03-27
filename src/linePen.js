@@ -30,6 +30,16 @@ export default class LinePen extends Pen {
     this.paths = [];
   }
 
+  drawBorder(rect) {
+    this.commitCurrentPath();
+    this.startAt(rect.a);
+    this.lineTo(rect.b);
+    this.lineTo(rect.c);
+    this.lineTo(rect.d);
+    this.connect();
+    return this;
+  }
+
   setPathAttributes() {
     this.currentPath.setAttribute("stroke-width", this.thickness);
     this.currentPath.setAttribute("stroke", this.lineColor);

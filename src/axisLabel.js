@@ -35,7 +35,7 @@ export default class AxisLabel {
     new TextPen(this.drawing)
       .setText(this.label)
       .setColor("orange")
-      .setPostion(textStartPoint)
+      .setPosition(textStartPoint)
       .drawOn(this.drawing);
   }
 
@@ -44,17 +44,18 @@ export default class AxisLabel {
       this.label,
       `normal ${this.fontSize}px Arial`
     );
-    const offset = Math.round(textMetrics.width / 2);
+    const yOffset = Math.round(textMetrics.width / 2);
+    const xOffset = Math.round(textMetrics.height);
 
     const textStartPoint = this.pointGenerator
-      .fromCenter(0, offset)
-      .fromLeftBorder()
+      .fromCenter(0, -yOffset)
+      .fromLeftBorder(xOffset)
       .generate();
 
     new TextPen(this.drawing)
       .setText(this.label)
       .setColor("purple")
-      .setPostion(textStartPoint)
+      .setPosition(textStartPoint)
       .rotate(-90, textStartPoint)
       .drawOn(this.drawing);
   }

@@ -1,5 +1,3 @@
-import { Rect } from "./rect";
-
 /**
  * Simple 2D Point class.
  */

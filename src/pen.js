@@ -9,7 +9,6 @@ export default class Pen {
 
   _flipY(y) {
     const newY = this.drawing.height - y;
-    console.log(this.drawing.height);
     return newY;
   }
 }
