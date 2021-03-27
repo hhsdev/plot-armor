@@ -4,6 +4,7 @@ import LinePen from "./linePen";
 import PointGenerator from "./pointGenerator";
 import { Rect } from "./rect";
 import Point from "./point";
+import { calculateSplinedPath } from "./bezier.js";
 
 export default class PlotLine {
   constructor(config) {
@@ -22,13 +23,26 @@ export default class PlotLine {
 
   draw() {
     if (this.dataset.length === 0) return;
+    const controlPoints = calculateSplinedPath(this.dataset);
     this.pen.startAt(this.fitOnGraph(this.dataset[0]));
     for (let i = 1; i < this.dataset.length; ++i) {
       const coordinate = this.fitOnGraph(this.dataset[i]);
       if (coordinate.isNaN()) {
         continue;
       }
-      this.pen.lineTo(coordinate);
+      let { p0, p1 } = controlPoints[i - 1];
+
+      if (i === 1) {
+        p1 = utils.mapPoint(this.srcRect, p1, this.destRect);
+        this.pen.splineBezierCurveTo(coordinate, p1);
+      } else if  (i === this.dataset.length - 1) {
+        p0 = utils.mapPoint(this.srcRect, p0, this.destRect);
+        this.pen.splineBezierCurveTo(coordinate, p0);
+      } else {
+        p0 = utils.mapPoint(this.srcRect, p0, this.destRect);
+        p1 = utils.mapPoint(this.srcRect, p1, this.destRect);
+        this.pen.cubicBezierCurveTo(coordinate, p0, p1);
+      }
     }
 
     this.pen.drawOn(this.drawing);

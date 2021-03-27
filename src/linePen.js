@@ -94,6 +94,25 @@ export default class LinePen extends Pen {
     return this;
   }
 
+  cubicBezierCurveTo(point, controlPoint0, controlPoint1) {
+    let { x, y } = point;
+    let { x: cp0x, y: cp0y } = controlPoint0;
+    let { x: cp1x, y: cp1y } = controlPoint1;
+    y = this._flipY(y);
+    cp0y = this._flipY(cp0y);
+    cp1y = this._flipY(cp1y);
+    this.actions.push(`C ${cp0x} ${cp0y}, ${cp1x} ${cp1y}, ${x} ${y} `);
+    return this;
+  }
+
+  splineBezierCurveTo(point, controlPoint) {
+    let { x, y } = point;
+    let { x: cpx, y: cpy } = controlPoint;
+    y = this._flipY(y);
+    cpy = this._flipY(cpy);
+    this.actions.push(`S ${cpx} ${cpy}, ${x} ${y} `);
+  }
+
   connect() {
     this.actions.push("Z ");
     return this;

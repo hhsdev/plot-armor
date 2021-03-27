@@ -8,13 +8,13 @@
   <title>Document</title>
   <script src="bundle.js"></script>
   <script>
-    window.onload = function () {
+    const cosAndSin = () => {
       const g = new Graph.Graph({
         width: 800,
         height: 600,
         viewBox: new Graph.Rect({ x0: 0, x1: 2 * Math.PI, y0: -1, y1: 1 }),
-        yLabels: [ -1, -0.5, 0, 0.5, 1 ],
-        xLabels: [ 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6 ],
+        yLabels: [-1, -0.5, 0, 0.5, 1],
+        xLabels: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6],
       });
       g.attachTo(document.getElementById('bdy'));
       const arr = []
@@ -26,16 +26,37 @@
       const cosData = arr.map((num) => {
         return { x: num, y: Math.cos(num) }
       });
-      const greenwich = arr.map((num) => {
-        return { x: num * 3, y: num }
-      });
 
       g.newPlotLine(sinData, "#f42601", true);
-      g.newPlotLine(greenwich, "#81e979", true);
       g.newPlotLine(cosData, "#449dd1", true);
 
       g.draw();
     };
+
+    const sparseDataset = () => {
+      const g = new Graph.Graph({
+        width: 1000,
+        height: 600,
+        viewBox: new Graph.Rect({ x0: 0, y0: 0, x1: 10, y1: 10 }),
+        yLabels: Array(10).fill(0).map((_, i) => {
+          const ret = {};
+          ret[i] = i * i * i;
+          return ret;
+        }),
+        xLabels: Array(10).fill(0).map((_, i) => i),
+      });
+
+
+      const data = Array(10).fill(0).map((_, i) => {
+        return { x: i, y: Math.random() * 10 }
+      });
+
+      g.attachTo(document.getElementById('bdy'));
+      g.newPlotLine(data, "#449dd1", false);
+      g.draw();
+    };
+
+    window.onload = sparseDataset;
   </script>
 </head>
 

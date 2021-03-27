@@ -17,7 +17,6 @@ export default class GridLineLabels {
 
   draw() {
     for (const { label, at } of this.labels) {
-      console.log("label:", label);
       this._drawGridLineLabel(at, label);
     }
   }
@@ -34,7 +33,6 @@ export default class GridLineLabels {
         `normal ${this.fontSize}px Arial`
       );
       const { y } = this.pointGenerator.fromTopBorder(0).generate();
-      console.log(x, y);
       this.pen
         .setPosition(new Point(x, y))
         .translate(new Point(-labelLength / 2, -labelHeight))

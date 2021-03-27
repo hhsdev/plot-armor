@@ -35,7 +35,7 @@ export default class Graph {
       `normal ${this.fontSize}px Arial`
     ).height;
 
-    const spaceForYGridLabels = this.computeLongestLabelLength(this.yLabels);
+    const spaceForYGridLabels = this.computeLongestLabelLength(this.yLabels) + 10;
     const spaceForXGridLabels = utils.getTextMetrics(
       this.xLabel,
       `normal ${this.fontSize}px Arial`
@@ -82,6 +82,7 @@ export default class Graph {
       x1: padding + spaceForYAxisLabel,
       y1: this.height - padding,
     });
+
     this.mainRect = mainRect;
 
     this.items = [
@@ -97,20 +98,6 @@ export default class Graph {
         orientation: "horizontal",
         viewBox: this.viewBox,
         rect: xLabelsRegion,
-        labels: this.xLabels,
-      }),
-      new Ticks({
-        drawing: this.drawing,
-        viewBox: this.viewBox,
-        orientation: "vertical",
-        rect: mainRect,
-        labels: this.yLabels,
-      }),
-      new Ticks({
-        drawing: this.drawing,
-        viewBox: this.viewBox,
-        orientation: "horizontal",
-        rect: mainRect,
         labels: this.xLabels,
       }),
       new GridLines({
@@ -177,6 +164,7 @@ export default class Graph {
       }
     });
   }
+
   computeRegions() {}
 
   attachTo(container) {

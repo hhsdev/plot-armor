@@ -60,11 +60,10 @@ export default class GridLines {
       if (startPoint.y === this.rect.y0) return;
     }
     this.pen
-      .setDashed()
-      .setLineColor("#aaa")
+      // .setDashed()
+      .setThickness(0.1)
+      .setLineColor("#ccc")
       .startAt(startPoint)
       .lineTo(endPoint)
-      .setSolid()
-      .setLineColor("black");
   }
 }
