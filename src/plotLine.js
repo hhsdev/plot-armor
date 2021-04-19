@@ -5,6 +5,7 @@ import PointGenerator from "./pointGenerator";
 import { Rect } from "./rect";
 import Point from "./point";
 import { calculateSplinedPath } from "./bezier.js";
+import PointPen from "./pointPen";
 
 export default class PlotLine {
   constructor(config) {
@@ -23,13 +24,17 @@ export default class PlotLine {
 
   draw() {
     if (this.dataset.length === 0) return;
+    const pointPen = new PointPen(this.drawing).setColor(this.color).setRadius(5);
     const controlPoints = calculateSplinedPath(this.dataset);
-    this.pen.startAt(this.fitOnGraph(this.dataset[0]));
+    const startingPoint = this.fitOnGraph(this.dataset[0])
+    this.pen.startAt(startingPoint);
+    pointPen.pointAt(startingPoint);
     for (let i = 1; i < this.dataset.length; ++i) {
       const coordinate = this.fitOnGraph(this.dataset[i]);
       if (coordinate.isNaN()) {
         continue;
       }
+      pointPen.pointAt(coordinate);
       let { p0, p1 } = controlPoints[i - 1];
 
       if (i === 1) {
@@ -46,6 +51,7 @@ export default class PlotLine {
     }
 
     this.pen.drawOn(this.drawing);
+    pointPen.drawOn(this.drawing);
   }
 
   fitOnGraph(point) {
