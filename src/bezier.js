@@ -39,7 +39,7 @@ const _calculateControlPoints = (prevPoint, currPoint, nextPoint, tension) => {
   return [prevAndCurrSplinePoint, currAndNextSplinePoint];
 };
 
-const calculateSplinedPath = (points = []) => {
+const calculateSplinedPath = (points = [], tension = 0.4) => {
   const controlPoints = [];
 
   let prevControlPoint = {};
@@ -48,7 +48,7 @@ const calculateSplinedPath = (points = []) => {
     const prev = points[i - 1];
     const next = points[i + 1];
 
-    const [a, b] = _calculateControlPoints(prev, curr, next, 0.4);
+    const [a, b] = _calculateControlPoints(prev, curr, next, tension);
     if (isNaN(a.x) || isNaN(a.y)) {
       console.log("a is NaN");
     }
