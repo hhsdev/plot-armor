@@ -10,4 +10,25 @@
   white-space: nowrap;
 }
 
+.plt-armor-tooltip {
+  position: relative;
+  display: inline-block;
+  padding: 16px;
+  border-radius: 4px;
+  font: normal 16px Ubuntu;
+  background: #334;
+  color: #ddd;
+}
+.plt-armor-tooltip::after {
+  display: inline-block;
+  content: "";
+  width: 16px;
+  height: 16px;
+  background: inherit;
+  position: absolute;
+  left: 0;
+  top: 25%;
+  transform: translateX(-50%) rotate(45deg);
+}
+
 /*# sourceMappingURL=index.css.map */
