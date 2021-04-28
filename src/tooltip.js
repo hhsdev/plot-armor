@@ -5,13 +5,16 @@ export default class Tooltip {
     this._drawing = config.drawing;
     this._node = document.createElement("span");
     this._node.setAttribute("class", "plt-armor-tooltip");
-    this._node.append(this._createDataLine('#449dd1', 'value of blue', 30));
-    this._node.append(this._createDataLine('#f42601', 'value of red-ed-ed-ed', 50));
-    this._visible = true;
+    this._node.append(this._createDataLine("#449dd1", "value of blue", 30));
+    this._node.append(
+      this._createDataLine("#f42601", "value of red-ed-ed-ed", 50)
+    );
+    this._drawing.frame.appendChild(this._node);
+    this.hide();
   }
 
   _createDataLine(color, label, value) {
-    const colorBlock = document.createElement('span');
+    const colorBlock = document.createElement("span");
     colorBlock.style.display = "inline-block";
     colorBlock.style.width = "8px";
     colorBlock.style.height = "8px";
@@ -19,7 +22,7 @@ export default class Tooltip {
     colorBlock.style.marginRight = "0.5em";
     colorBlock.style.background = color;
 
-    const p = document.createElement('p');
+    const p = document.createElement("p");
     p.innerText = `${label}: ${value}`;
     p.prepend(colorBlock);
     return p;
@@ -47,7 +50,13 @@ export default class Tooltip {
    * Sets the position.
    * @param {Point} pos Position
    */
-  setPosition(pos) {}
+  setPosition(pos) {
+    this._node.style.position = "absolute";
+    // we add 10 here to account for the tooltip "arrow"
+    // on the left
+    this._node.style.left = pos.x + 10 + "px";
+    this._node.style.top = "10%";
+  }
 
   /**
    * Draws the tooltip.
@@ -55,12 +64,12 @@ export default class Tooltip {
   draw() {
     if (!this._visible) {
       try {
-        this._drawing.frame.removeChild(this._node);
+        this._node.style.opacity = 0;
       } catch (err) {
         console.warn(err);
       }
     } else {
-      this._drawing.frame.appendChild(this._node);
+      this._node.style.opacity = 1;
     }
   }
 }

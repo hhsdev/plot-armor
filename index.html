@@ -46,13 +46,16 @@
         xLabels: Array(10).fill(0).map((_, i) => i),
       });
 
-
-      const data = Array(10).fill(0).map((_, i) => {
-        return { x: i, y: Math.random() * 10 }
+      const data1 = Array(10).fill(0).map((_, i) => {
+        return { x: i, y: Math.random() * 8 }
+      });
+      const data2 = Array(10).fill(0).map((_, i) => {
+        return { x: i, y: Math.random() * 8 }
       });
 
       g.attachTo(document.getElementById('bdy'));
-      g.newPlotLine(data, "#449dd1", false);
+      g.newPlotLine(data1, "#f42601", false);
+      g.newPlotLine(data2, "#449dd1", false);
       g.draw();
     };
 

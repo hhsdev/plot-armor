@@ -12,7 +12,7 @@ export default class GridLines {
     this.rect = config.rect;
     this.labels = config.labels;
     this.viewBox = config.viewBox;
-
+    this.tooltip = config.tooltip;
     this.pen = new LinePen(this.drawing).setThickness(1);
     this.pointGenerator = new PointGenerator(this.rect);
     this.ticks = 5;
@@ -61,8 +61,17 @@ export default class GridLines {
       if (startPoint.y === this.rect.y0) return;
     }
     this.pen
-      .setThickness(0.1)
-      .setLineColor("black")
+      .setThickness(3)
+      .setLineColor("#eee")
+      .startAt(startPoint)
+      .lineTo(endPoint);
+
+    // We need a thicker, but transparent line on top of the
+    // gridlines to attach hover/hoverout events to so that
+    // users don't need to fiddle with their mouse.
+    this.pen
+      .setThickness(10)
+      .setLineColor("rgba(0, 0, 0, 0)")
       .startAt(startPoint)
       .lineTo(endPoint);
 

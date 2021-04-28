@@ -17,8 +17,8 @@ export default class Graph {
   constructor(config) {
     config = config || {};
     this.viewBox = config.viewBox;
-    this.width = config.width || 600;
-    this.height = config.height || 600;
+    this.width = config.width;
+    this.height = config.height;
     this.padding = config.padding || 30;
     this.drawing = config.drawing || new Drawing(this.width, this.height);
 
@@ -37,7 +37,8 @@ export default class Graph {
       `normal ${this.fontSize}px Arial`
     ).height;
 
-    const spaceForYGridLabels = this.computeLongestLabelLength(this.yLabels) + 10;
+    const spaceForYGridLabels =
+      this.computeLongestLabelLength(this.yLabels) + 10;
     const spaceForXGridLabels = utils.getTextMetrics(
       this.xLabel,
       `normal ${this.fontSize}px Arial`
@@ -87,6 +88,9 @@ export default class Graph {
 
     this.mainRect = mainRect;
 
+    this.tooltip = new Tooltip({ drawing: this.drawing });
+    this.tooltip.draw();
+
     this.items = [
       new GridLineLabels({
         drawing: this.drawing,
@@ -108,6 +112,7 @@ export default class Graph {
         viewBox: this.viewBox,
         rect: mainRect,
         labels: this.yLabels,
+        tooltip: this.tooltip,
       }),
       new GridLines({
         drawing: this.drawing,
@@ -115,6 +120,7 @@ export default class Graph {
         viewBox: this.viewBox,
         rect: mainRect,
         labels: this.xLabels,
+        tooltip: this.tooltip,
       }),
       new Axis({
         rect: mainRect,

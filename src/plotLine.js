@@ -13,20 +13,25 @@ export default class PlotLine {
     this.destRect = config.rect;
 
     this.dataset = config.dataset || [];
-    this.dataset = this.dataset.map(({x, y}) => new Point(x, y));
+    this.dataset = this.dataset.map(({ x, y }) => new Point(x, y));
     this.drawing = config.drawing; // TODO: not having a drawing is an error
 
-
     this.color = config.color || utils.randomColor();
-    this.pen = new LinePen(this.drawing).setThickness(4).setLineColor(this.color);
+    this.pen = new LinePen(this.drawing)
+      .setThickness(4)
+      .setLineColor(this.color);
+    this.pen.setAttribute("class", "pa-plot-line");
     this.pointGenerator = new PointGenerator(0, 0, this.width, this.height);
   }
 
   draw() {
     if (this.dataset.length === 0) return;
-    const pointPen = new PointPen(this.drawing).setColor(this.color).setRadius(5);
+    const pointPen = new PointPen(this.drawing)
+      .setColor(this.color)
+      .setRadius(5)
+      .setAttribute("class", "pa-plot-point");
     const controlPoints = calculateSplinedPath(this.dataset);
-    const startingPoint = this.fitOnGraph(this.dataset[0])
+    const startingPoint = this.fitOnGraph(this.dataset[0]);
     this.pen.startAt(startingPoint);
     pointPen.pointAt(startingPoint);
     for (let i = 1; i < this.dataset.length; ++i) {
@@ -40,7 +45,7 @@ export default class PlotLine {
       if (i === 1) {
         p1 = utils.mapPoint(this.srcRect, p1, this.destRect);
         this.pen.splineBezierCurveTo(coordinate, p1);
-      } else if  (i === this.dataset.length - 1) {
+      } else if (i === this.dataset.length - 1) {
         p0 = utils.mapPoint(this.srcRect, p0, this.destRect);
         this.pen.splineBezierCurveTo(coordinate, p0);
       } else {
