@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="../css/index.css" />
   <title>Document</title>
-  <script src="bundle.js"></script>
+  <script src="../bundle.js"></script>
   <script>
     const cosAndSin = () => {
       const g = new Graph.Graph({
@@ -37,19 +37,19 @@
       const g = new Graph.Graph({
         width: 1000,
         height: 600,
-        viewBox: new Graph.Rect({ x0: 0, y0: 0, x1: 10, y1: 10 }),
+        viewBox: new Graph.Rect({ x0: 0, y0: 0, x1: 20, y1: 20 }),
         yLabels: Array(10).fill(0).map((_, i) => {
           const ret = {};
-          ret[i] = i;
+          ret[i * 2] = i * 2;
           return ret;
         }),
-        xLabels: Array(10).fill(0).map((_, i) => i),
+        xLabels: Array(10).fill(0).map((_, i) => i * 2),
       });
 
-      const data1 = Array(10).fill(0).map((_, i) => {
+      const data1 = Array(20).fill(0).map((_, i) => {
         return { x: i, y: Math.random() * 8 }
       });
-      const data2 = Array(10).fill(0).map((_, i) => {
+      const data2 = Array(20).fill(0).map((_, i) => {
         return { x: i, y: Math.random() * 8 }
       });
 
