@@ -18,6 +18,8 @@
   font: normal 16px Ubuntu;
   background: #334;
   color: #ddd;
+  pointer-events: none;
+  transition: 0.3s;
 }
 .plt-armor-tooltip::after {
   display: inline-block;
@@ -29,6 +31,14 @@
   left: 0;
   top: 25%;
   transform: translateX(-50%) rotate(45deg);
+}
+
+.pa-plot-point {
+  pointer-events: none;
+}
+
+.pa-plot-line {
+  pointer-events: none;
 }
 
 /*# sourceMappingURL=index.css.map */
