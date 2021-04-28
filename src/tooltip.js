@@ -5,10 +5,6 @@ export default class Tooltip {
     this._drawing = config.drawing;
     this._node = document.createElement("span");
     this._node.setAttribute("class", "plt-armor-tooltip");
-    this._node.append(this._createDataLine("#449dd1", "value of blue", 30));
-    this._node.append(
-      this._createDataLine("#f42601", "value of red-ed-ed-ed", 50)
-    );
     this._drawing.frame.appendChild(this._node);
     this.hide();
   }
@@ -40,10 +36,10 @@ export default class Tooltip {
    * Reveals the toolip.
    * @param {Point} pos Position to show at
    */
-  show(pos) {
+  show(pos, values) {
     if (pos) this.setPosition(pos);
     this._visible = true;
-    this.draw();
+    this.draw(values);
   }
 
   /**
@@ -61,7 +57,7 @@ export default class Tooltip {
   /**
    * Draws the tooltip.
    */
-  draw() {
+  draw(values) {
     if (!this._visible) {
       try {
         this._node.style.opacity = 0;
@@ -69,6 +65,10 @@ export default class Tooltip {
         console.warn(err);
       }
     } else {
+      this._node.innerHTML = "";
+      for (const { data, color } of values) {
+        this._node.append(this._createDataLine(color, "", data.y));
+      }
       this._node.style.opacity = 1;
     }
   }

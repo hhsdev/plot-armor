@@ -13,19 +13,19 @@ export default class GridLines {
     this.labels = config.labels;
     this.viewBox = config.viewBox;
     this.tooltip = config.tooltip;
-    this.pen = new LinePen(this.drawing).setThickness(1);
+    this.pen = new LinePen(this.drawing);
     this.pointGenerator = new PointGenerator(this.rect);
     this.ticks = 5;
   }
 
   draw() {
-    for (const { at } of this.labels) {
-      this._drawGridLine(at);
+    for (const index in this.labels) {
+      this._drawGridLine(this.labels[index].at, index);
     }
     this.pen.drawOn(this.drawing);
   }
 
-  _drawGridLine(lengthAlongAxis) {
+  _drawGridLine(lengthAlongAxis, lineNumber) {
     let startPoint, endPoint;
     if (this.orientation === "horizontal") {
       const { x } = utils.mapPoint(
@@ -61,7 +61,7 @@ export default class GridLines {
       if (startPoint.y === this.rect.y0) return;
     }
     this.pen
-      .setThickness(3)
+      .setThickness(1.5)
       .setLineColor("#eee")
       .startAt(startPoint)
       .lineTo(endPoint);
@@ -79,7 +79,10 @@ export default class GridLines {
       this.pen.addEventListener("mouseenter", (e) => {
         const gridlineRect = e.target.getBoundingClientRect();
         const x = gridlineRect.x + gridlineRect.width / 2;
-        EventDispatcher.instance().emitEvent("GRID_LINES_HOVER", new Point(x, e.clientY));
+        EventDispatcher.instance().emitEvent("GRID_LINES_HOVER", {
+          pos: new Point(x, e.clientY),
+          index: lineNumber,
+        });
       });
       this.pen.addEventListener("mouseleave", (e) => {
         EventDispatcher.instance().emitEvent("GRID_LINES_UNHOVER");

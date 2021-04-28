@@ -149,10 +149,15 @@ export default class Graph {
     this.pointGenerator = new PointGenerator(0, 0, this.width, this.height);
     this.pen = new LinePen(this.drawing).setThickness(1).setLineColor("black");
     this.plotLines = [];
-    EventDispatcher.instance().subscribeToEvent("GRID_LINES_HOVER", (pos) =>
-      this.tooltip.show(pos)
+    EventDispatcher.instance().subscribeToEvent("GRID_LINES_HOVER", ({ pos, index }) => {
+      const values = this.plotLines.map(plotLine => ({
+        color: plotLine.color,
+        data: plotLine.dataset[index],
+      }));
+      this.tooltip.show(pos, values)
+    }
     );
-    EventDispatcher.instance().subscribeToEvent("GRID_LINES_UNHOVER", (pos) =>
+    EventDispatcher.instance().subscribeToEvent("GRID_LINES_UNHOVER", () =>
       this.tooltip.hide()
     );
   }
