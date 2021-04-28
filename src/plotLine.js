@@ -6,6 +6,7 @@ import { Rect } from "./rect";
 import Point from "./point";
 import { calculateSplinedPath } from "./bezier.js";
 import PointPen from "./pointPen";
+import EventDispatcher from "./events/eventDispatcher";
 
 export default class PlotLine {
   constructor(config) {
@@ -26,6 +27,11 @@ export default class PlotLine {
 
   draw() {
     if (this.dataset.length === 0) return;
+    this._drawPlotLine();
+    this._drawGhostHitboxes();
+  }
+
+  _drawPlotLine() {
     const pointPen = new PointPen(this.drawing)
       .setColor(this.color)
       .setRadius(5)
@@ -57,6 +63,43 @@ export default class PlotLine {
 
     this.pen.drawOn(this.drawing);
     pointPen.drawOn(this.drawing);
+  }
+
+  _drawGhostHitboxes() {
+    // We need a transparent vertical line on top of each data point
+    // which will enable us to catch mouse events so that we can
+    // show the y-values at that point on hover.
+    const pen = new LinePen(this.drawing)
+      .setThickness(20)
+      .setLineColor("rgba(0, 0, 0, 0)");
+    const pointGenerator = new PointGenerator(this.srcRect);
+    for (const i in this.dataset) {
+      const coordinate = this.dataset[i];
+      const startPoint = this.fitOnGraph(
+        pointGenerator
+          .fromBottomBorder(0)
+          .fromLeftBorder(coordinate.x)
+          .generate()
+      );
+      const endPoint = this.fitOnGraph(
+        pointGenerator.fromTopBorder(0).fromLeftBorder(coordinate.x).generate()
+      );
+
+      pen.startAt(startPoint).lineTo(endPoint);
+      pen.addEventListener("mouseenter", (e) => {
+        console.log("mouse entered");
+        const gridlineRect = e.target.getBoundingClientRect();
+        const x = gridlineRect.x + gridlineRect.width / 2;
+        EventDispatcher.instance().emitEvent("GRID_LINES_HOVER", {
+          pos: new Point(x, e.clientY),
+          index: i,
+        });
+      });
+      pen.addEventListener("mouseleave", (e) => {
+        EventDispatcher.instance().emitEvent("GRID_LINES_UNHOVER");
+      });
+      pen.drawOn(this.drawing);
+    }
   }
 
   fitOnGraph(point) {

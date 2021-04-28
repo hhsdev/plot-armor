@@ -1,5 +1,7 @@
 "use strict";
 
+import Point from "./point";
+
 export default class PointGenerator1D {
   constructor(orientation, x0, y0, x1, y1) {
     if (orientation === "horizontal") {
@@ -55,7 +57,7 @@ export default class PointGenerator1D {
   }
 
   generate() {
-    return { x: this.x, y: this.y };
+    return new Point(this.x, this.y);
   }
 
   fromBaseBorder(distance) {

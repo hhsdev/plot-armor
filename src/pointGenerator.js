@@ -1,5 +1,7 @@
 "use strict";
 
+import Point from "./point";
+
 export default class PointGenerator {
   constructor(rect) {
     const { x0, y0, x1, y1 } = rect;
@@ -13,7 +15,7 @@ export default class PointGenerator {
 
   generate() {
     const { x, y } = this;
-    return { x, y };
+    return new Point(x, y);
   }
 
   xIs(x) {
@@ -90,5 +92,4 @@ export default class PointGenerator {
     this.y = centerY + offsetY;
     return this;
   }
-
 }
