@@ -70,14 +70,16 @@ export default class GridLines {
     // gridlines to attach hover/hoverout events to so that
     // users don't need to fiddle with their mouse.
     this.pen
-      .setThickness(10)
+      .setThickness(20)
       .setLineColor("rgba(0, 0, 0, 0)")
       .startAt(startPoint)
       .lineTo(endPoint);
 
     if (this.orientation === "horizontal") {
       this.pen.addEventListener("mouseenter", (e) => {
-        EventDispatcher.instance().emitEvent("GRID_LINES_HOVER", new Point(e.clientX, e.clientY));
+        const gridlineRect = e.target.getBoundingClientRect();
+        const x = gridlineRect.x + gridlineRect.width / 2;
+        EventDispatcher.instance().emitEvent("GRID_LINES_HOVER", new Point(x, e.clientY));
       });
       this.pen.addEventListener("mouseleave", (e) => {
         EventDispatcher.instance().emitEvent("GRID_LINES_UNHOVER");
