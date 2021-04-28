@@ -5,16 +5,22 @@ export default class LinePen extends Pen {
   constructor(drawing) {
     super(drawing);
 
-    this.actions = [];
-    this.thickness = 0;
-    this.lineColor = "black";
-    this.strokeDashArray = "";
-
+    this._drawingActions = [];
     this.paths = [];
-    this.currentPath = this.newPath();
+
+    this.setThickness(1);
+    this.setLineColor("black");
+    this.currentPath = this._newPath();
   }
 
-  newPath() {
+  _commitDrawingActions(path) {
+    path.setAttribute(
+      "d",
+      this._drawingActions.reduce((accu, curr) => (accu += curr))
+    );
+  }
+
+  _newPath() {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute("fill", "transparent");
     return path;
@@ -31,7 +37,7 @@ export default class LinePen extends Pen {
   }
 
   drawBorder(rect) {
-    this.commitCurrentPath();
+    this._commitCurrentPath();
     this.startAt(rect.a);
     this.lineTo(rect.b);
     this.lineTo(rect.c);
@@ -40,57 +46,47 @@ export default class LinePen extends Pen {
     return this;
   }
 
-  setPathAttributes() {
-    this.currentPath.setAttribute("stroke-width", this.thickness);
-    this.currentPath.setAttribute("stroke", this.lineColor);
-    this.currentPath.setAttribute("stroke-dasharray", this.strokeDashArray);
-    this.currentPath.setAttribute(
-      "d",
-      this.actions.reduce((accu, curr) => (accu += curr))
-    );
-  }
-
   setThickness(thickness) {
-    this.commitCurrentPath();
-    this.thickness = thickness;
+    this._commitCurrentPath();
+    this._attributes["stroke-width"] = thickness;
     return this;
   }
 
   setLineColor(color) {
-    this.commitCurrentPath();
-    this.lineColor = color;
+    this._commitCurrentPath();
+    this._attributes["stroke"] = color;
     return this;
   }
 
   setDashed() {
-    this.commitCurrentPath();
-    this.strokeDashArray = "5,5";
+    this._commitCurrentPath();
+    this._attributes["stroke-dasharray"] = "5,5";
     return this;
   }
 
   setDotted() {
-    this.commitCurrentPath();
-    this.strokeDashArray = "2,2";
+    this._commitCurrentPath();
+    this._attributes["stroke-dasharray"] = "2,2";
     return this;
   }
 
   setSolid() {
-    this.commitCurrentPath();
-    this.strokeDashArray = "";
+    this._commitCurrentPath();
+    this._attributes["stroke-dasharray"] = "";
     return this;
   }
 
   startAt(point) {
     let { x, y } = point;
     y = this._flipY(y);
-    this.actions.push(`M ${x}, ${y} `);
+    this._drawingActions.push(`M ${x}, ${y} `);
     return this;
   }
 
   lineTo(point) {
     let { x, y } = point;
     y = this._flipY(y);
-    this.actions.push(`L ${x}, ${y} `);
+    this._drawingActions.push(`L ${x}, ${y} `);
     return this;
   }
 
@@ -101,7 +97,7 @@ export default class LinePen extends Pen {
     y = this._flipY(y);
     cp0y = this._flipY(cp0y);
     cp1y = this._flipY(cp1y);
-    this.actions.push(`C ${cp0x} ${cp0y}, ${cp1x} ${cp1y}, ${x} ${y} `);
+    this._drawingActions.push(`C ${cp0x} ${cp0y}, ${cp1x} ${cp1y}, ${x} ${y} `);
     return this;
   }
 
@@ -110,25 +106,27 @@ export default class LinePen extends Pen {
     let { x: cpx, y: cpy } = controlPoint;
     y = this._flipY(y);
     cpy = this._flipY(cpy);
-    this.actions.push(`S ${cpx} ${cpy}, ${x} ${y} `);
+    this._drawingActions.push(`S ${cpx} ${cpy}, ${x} ${y} `);
   }
 
   connect() {
-    this.actions.push("Z ");
+    this._drawingActions.push("Z ");
     return this;
   }
 
-  commitCurrentPath() {
-    if (this.actions.length === 0) return;
-    this.setPathAttributes();
-    this.actions = [];
+  _commitCurrentPath() {
+    if (this._drawingActions.length === 0) return;
+    this._commitAttributes(this.currentPath);
+    this._commitEvents(this.currentPath);
+    this._commitDrawingActions(this.currentPath);
     this.paths.push(this.currentPath);
 
-    this.currentPath = this.newPath();
+    this._drawingActions = [];
+    this.currentPath = this._newPath();
   }
 
   drawOn(drawing) {
-    this.commitCurrentPath();
+    this._commitCurrentPath();
     for (const path of this.paths) {
       drawing.add(path);
     }

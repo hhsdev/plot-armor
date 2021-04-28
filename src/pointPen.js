@@ -28,6 +28,9 @@ export default class PointPen extends Pen {
     dot.setAttribute("cy", y);
     dot.setAttribute("r", this.radius);
     dot.setAttribute("stoke-width", "0");
+
+    this._commitAttributes(dot);
+    this._commitEvents(dot);
     this.dots.push(dot);
     return this;
   }
