@@ -3,6 +3,7 @@ import LinePen from "./linePen";
 import PointGenerator from "./pointGenerator";
 import utils from "./utils";
 import Point from "./point";
+import EventDispatcher from "./events/eventDispatcher";
 
 export default class GridLines {
   constructor(config) {
@@ -63,6 +64,15 @@ export default class GridLines {
       .setThickness(0.1)
       .setLineColor("black")
       .startAt(startPoint)
-      .lineTo(endPoint)
+      .lineTo(endPoint);
+
+    if (this.orientation === "horizontal") {
+      this.pen.addEventListener("mouseenter", (e) => {
+        EventDispatcher.instance().emitEvent("GRID_LINES_HOVER", new Point(e.clientX, e.clientY));
+      });
+      this.pen.addEventListener("mouseleave", (e) => {
+        EventDispatcher.instance().emitEvent("GRID_LINES_UNHOVER");
+      });
+    }
   }
 }

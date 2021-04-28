@@ -10,6 +10,8 @@ import { Rect } from "./rect";
 import AxisLabel from "./axisLabel";
 import utils from "./utils";
 import GridLineLabels from "./gridLineLabels";
+import Tooltip from "./tooltip";
+import EventDispatcher from "./events/eventDispatcher";
 
 export default class Graph {
   constructor(config) {
@@ -141,6 +143,12 @@ export default class Graph {
     this.pointGenerator = new PointGenerator(0, 0, this.width, this.height);
     this.pen = new LinePen(this.drawing).setThickness(1).setLineColor("black");
     this.plotLines = [];
+    EventDispatcher.instance().subscribeToEvent("GRID_LINES_HOVER", (pos) =>
+      this.tooltip.show(pos)
+    );
+    EventDispatcher.instance().subscribeToEvent("GRID_LINES_UNHOVER", (pos) =>
+      this.tooltip.hide()
+    );
   }
 
   computeLongestLabelLength(labels) {
